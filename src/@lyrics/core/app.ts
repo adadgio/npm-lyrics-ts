@@ -8,7 +8,8 @@ import * as dotenv  from 'dotenv';
 import * as express from 'express';
 import * as parser  from 'body-parser';
 
-import * as controllers  from './../../app/controller';
+import * as container from './../routing/container';
+import * as controllers from './../../app/controller';
 import { Argument, Configuration } from './';
 
 export class App {
@@ -68,13 +69,19 @@ export class App {
 
     private routing(): void
     {
+        // container.debug();
+
         for (let ctrl in controllers) {
             let controller = new controllers[ctrl](this, this.router);
-            controller.setRoutes();
+            
+            // using routing container, set found routes
+            // define all express routes
+            container.setRoutes(this.router);
         }
 
         // tell the express app to all all the
         // defined routes from this base point
+
         this.express.use('/', this.router);
         this.express.listen(this.config.get('framework.express.port'));
     }

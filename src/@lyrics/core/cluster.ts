@@ -9,7 +9,8 @@ export class Cluster {
     private numCPUs: number;
 
     constructor() {
-        this.numCPUs = os.cpus().length - 2;
+        this.numCPUs = 1; // @todo Remove, only for debug
+        // this.numCPUs = os.cpus().length - 2;
     }
 
     /**
