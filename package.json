@@ -1,0 +1,35 @@
+{
+  "name": "lyrics",
+  "version": "1.0.0",
+  "description": "A typescript test package",
+  "repository": "https://github.com/adadgio/nodejs-typescript-starter",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "npm run build:live",
+    "assets:install": "copyfiles src/config/* src/assets/**/* dist/",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^7.0.0",
+    "copyfiles": "^1.0.0",
+    "nodemon": "^1.11.0",
+    "ts-node": "^2.0.0",
+    "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "@types/body-parser": "0.0.33",
+    "@types/dotenv": "^2.0.19",
+    "@types/express": "^4.0.34",
+    "@types/node": "^7.0.0",
+    "@types/request": "0.0.39",
+    "@types/yamljs": "^0.2.30",
+    "body-parser": "^1.15.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.0",
+    "request": "^2.79.0",
+    "yamljs": "^0.2.8"
+  }
+}
