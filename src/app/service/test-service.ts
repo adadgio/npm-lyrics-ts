@@ -11,7 +11,7 @@ export class TestService extends Service implements ServiceInterface
          // required when extending base services
         super(params);
     }
-
+    
     public sayHi(name: string) {
         return `Greetings ${name}!`;
     }

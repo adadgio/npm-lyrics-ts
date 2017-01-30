@@ -1,61 +1,33 @@
 /**
- *
+ * The route annotation
  */
+import 'reflect-metadata';
 import * as container from './container';
+import { RouteOptions, RouteMetadata } from './metadata';
 
-export function Route(route: string): any {
-    return function (target: Object, methodName: string, descriptor: PropertyDescriptor) {
+export function Route(route: string, options: RouteOptions): any {
 
-        let metadata = {
-            route: route,
-            method: methodName,
-            target: target,
-        }
+    return function (target: Function, methodName: string, descriptor: TypedPropertyDescriptor<any>) {
+        // save a reference to the original method
+        let originalMethod = descriptor.value;
 
-        container.addMethodRouteMetaData(metadata);
+        // use reflection api to determine parameter types
+        let type = Reflect.getMetadata('design:type', target, methodName);
+        let paramsMeta = Reflect.getMetadata('design:paramtypes', target, methodName);
+        
 
-        return descriptor;
+        descriptor.value = function (...args: any[]) {
+            let result = originalMethod.apply(target, args);
+            return result;
+        };
 
-        // // save a reference to the original method
-        // let originalMethod = descriptor.value;
-        //
-        // descriptor.value = function (...args: any[]) {
-        //     console.log(args);
-        //
-        //
-        //     // invoke method and get its return value
-        //     let result = originalMethod.apply(this, args);
-        //     return result;
-        // };
+        // string name of the parent class the method belongs to
+        let parentClassName = target.constructor.prototype.constructor.name;
+        const metadata = new RouteMetadata(parentClassName, route, options, target, methodName, descriptor);
 
-        // let router = descriptor.value();
-        // console.log(router);
-        // router.get('/', (req, res, next) => {
-        //
-        // });
+        container.addRouteMeta(metadata);
 
-        // console.log(descriptor.value().app);
-
-        // Note: Do not use arrow syntax here. Use a function expression in
-        // order to use the correct value of `this` in this method (see notes below)
-        // descriptor.value = function (...args: any[]) {
-        //     console.log(args);
-        //     console.log(this.app);
-        //     console.log('The method args are ' + JSON.stringify(args));
-        //     let result = originalMethod.apply(this, args);
-        //     return result;
-        // };
-
-        // descriptor.value = function (...args: any[]) {
-        //     console.log(args);
-        //     console.log(this.app);
-        //     console.log('Route set');
-        //     originalMethod.apply(this);
-        // };
-
-
-        // descriptor.value();
-        // originalMethod.apply(this, [2,3]);
+        // optional, code work without this
         // return descriptor;
     }
 }

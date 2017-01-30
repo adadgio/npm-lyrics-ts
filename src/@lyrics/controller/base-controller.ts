@@ -1,10 +1,17 @@
+import { App } from './../core/app';
+
 export class BaseController
 {
-    protected app;
-    protected router;
+    protected app: App;
 
-    constructor(app, router) {
+    constructor(app: App) {
         this.app = app;
-        this.router = router;
+        this.app.log('Base controller constructed');
+    }
+
+    protected get(serviceName: string) {
+        console.log(serviceName);
+        this.app.log('Requested service ' + serviceName);
+        // return this.app.get(serviceName);
     }
 }

@@ -1,16 +1,17 @@
 /**
- *
+ * The @Controller annotation function.
  */
 import * as container from './container';
+import { ControllerMetadata } from './metadata';
 
 export function Controller(route: string): any {
-    return function (target: Function) {
+    return function (object: Function) {
 
-        let metadata = {
-            route: route,
-            target: target,
-        }
-        
-        container.addControllerRouteMetaData(metadata);
+        // the name of the class as defined
+        let className = object.prototype.constructor.name;
+        const metadata = new ControllerMetadata(className, route, object);
+
+        container.addControllerMeta(metadata);
+
    };
 }

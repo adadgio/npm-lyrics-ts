@@ -10,16 +10,18 @@ import * as parser  from 'body-parser';
 
 import * as container from './../routing/container';
 import * as controllers from './../../app/controller';
-import { Argument, Configuration } from './';
+import { RouterBridge } from './../routing';
+import { Console, Argument, Configuration } from './';
 
 export class App {
     private readonly root: string;
     private readonly env: string;
 
+    public config: Configuration;
     public router: express.Router;
-    public express: express.Application;
 
-    private config: Configuration;
+    private xdebug: boolean;
+    private express: express.Application;
     private services: Object = {};
     private webroot: string = null;
 
@@ -40,8 +42,11 @@ export class App {
         let yamlConfig = yaml.load(confpath);
 
         // save configuration parameters into app
+        // and basic default app configuration vars
+        this.xdebug = false;
         this.config = new Configuration();
         this.config.inject(yamlConfig);
+        container.setApp(this);
     }
 
     public run(): void
@@ -57,67 +62,119 @@ export class App {
 
     private middleware(): void
     {
-        // tell express to parse incoming body
-        // from json to object
-        this.express.use(parser.json());
+        // tell express to parse incoming body from json to object
+        // this.express.use(parser.json());
         this.express.use(parser.urlencoded({ extended: false }));
-
-        if (this.webroot !== null) {
-            this.express.use('/web', express.static(this.webroot));
-        }
     }
 
-    private routing(): void
+    /**
+     * Creates routing from controllers explicitely
+     * decorated with @Controller or @Route annotations.
+     */
+    private routing()
     {
-        // container.debug();
-
+        // just read the controller (for typescript compiler)
+        // there is nothing to do... the annotations are
+        // automatically read here by ts (??). Strange but it works
+        // router bridge is the one responsible for creating the ctrl instances
         for (let ctrl in controllers) {
-            let controller = new controllers[ctrl](this, this.router);
-            
-            // using routing container, set found routes
-            // define all express routes
-            container.setRoutes(this.router);
+            this.log(`Controller ${ctrl} read by typescript by compiler`, 0);
+            // let controller = new controllers[ctrl](this);
+        }
+
+        RouterBridge.setRoutes();
+        if (this.xdebug === true) {
+            RouterBridge.debug();
         }
 
         // tell the express app to all all the
         // defined routes from this base point
-
         this.express.use('/', this.router);
         this.express.listen(this.config.get('framework.express.port'));
     }
-
-    public setWebRoot(path: string)
-    {
-        this.webroot = path;
-    }
-
-    public get(name: string) {
+    
+    /**
+     * Get a service from the container.
+     */
+    public get(name: string): Object {
         // init service with dependency injections in case its not
-        if (typeof this.services[name] === 'undefined') {
+        if (!container.isServiceRegistered(name)) {
             // service was not registered
-            throw new Error('Service "['+ name +']" was never registered');
+            throw new Error(`Service [${name}] was never registered`);
 
-        } else if (this.services[name].inited === false) {
+        } else if (!container.isServiceInited(name)) {
             // service registered but never inited (contructed + inject)
-            this.services[name].inited = true;
-            this.services[name].service = new this.services[name].target({ router: this.router, config: this.config });
+            container.initService(name);
         }
 
-        return this.services[name].service;
+        return container.getServiceInstance(name);
     }
 
-    public register(name: string, target: any) {
-        this.services[name] = { inited: false, target: target, service: null };
+    /**
+     * Set service name and prototype into the container
+     */
+    public register(name: string, target: Object)
+    {
+        container.registerService(name, target);
     }
 
+    /**
+     * Toggle app wide debug mode or not.
+     */
+    public debug(value: boolean): App
+    {
+        this.xdebug = value;
+        return this;
+    }
+
+    /**
+     * Logs messages to the console
+     * happens only if debug mode is on
+     */
+    public log(msg: string, priority: number | null = 1): void
+    {
+        if (this.xdebug === false) { return; }
+
+        switch (priority) {
+            case 1:
+                Console.info(msg);
+            break;
+            case 2:
+                Console.warn(msg);
+            break;
+            case 3:
+                Console.error(msg);
+            break;
+            default:
+                Console.log(msg);
+            break;
+        }
+    }
+
+    getInfo() {
+        return `A lyrics application`;
+    }
+
+    /**
+     * Get app environment.
+     * Environment
+     */
     public getEnv()
     {
         return this.env;
     }
 
+    /**
+     * Get app Configuration provider.
+     */
     public getConfig()
     {
         return this.config;
+    }
+
+    public getRouter()
+    {
+        return this.router;
     }
 
     public getConfigValue(name: string)

@@ -1,30 +1,36 @@
-import { Route, Controller } from './../../@lyrics/routing';
-import { BaseController } from './../../@lyrics/controller';
+import { App }                          from './../../@lyrics/core';
+import { Route, Controller, Inject }    from './../../@lyrics/routing';
+import { BaseController }               from './../../@lyrics/controller';
+import { Request, Response }            from './../../@lyrics/http';
 
 @Controller('/default')
 export class DefaultController extends BaseController
 {
-    constructor(app, router) {
-        super(app, router);
+    constructor(app: App) {
+        super(app);
     }
-    
-    @Route('/hello')
-    indexAction(truc: string)
+
+    @Route('/hello', {
+        type: 'GET'
+    })
+    indexAction(name: string)
     {
+        console.log('EXECUTED METHOD');
+
+        let test = this.get('test.service');
+        // test.sayHi('sdf');
+        
+
+        // console.log(this.app);
         // example, access app container registered service
         // let test = this.app.get('test.service');
         // let name = this.app.config.get('my_stuff.name');
+        // console.log(this.app);
 
+        return this.test(3);
+    }
 
-
-        // this.router.get('/', (req, res, next) => {
-        //     // add some heavy logic...
-        //     let greeting = test.sayHi(name);
-        //
-        //     // send back a response
-        //     res.json({ message: 'It works!', value: greeting });
-        // });
-
-        return 48;
+    private test(a: number) {
+        return a * 54;
     }
 }

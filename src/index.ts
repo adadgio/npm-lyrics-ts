@@ -12,9 +12,9 @@ let clustering = new Cluster();
 
 clustering.start(f => {
     let app = new App();
-
+    
+    app.debug(true);
     app.register('test.service', TestService);
-    // app.setWebRoot('www');
 
     app.run();
 });

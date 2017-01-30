@@ -1,12 +1,12 @@
 /**
- * Singletong configuration service
+ * Configuration service
  */
 import { Accessor } from './accessor';
 
 export class Configuration
 {
     private config: Object;
-    
+
     constructor()
     {
 
