@@ -2,11 +2,11 @@
  * The route annotation
  */
 import 'reflect-metadata';
-import * as container from './../core/container';
-import { InjectMetadata } from './metadata';
+import * as container       from './../core/container';
+import { InjectMetadata }   from './metadata';
 
 // const requiredMetadataKey = Symbol('Inject');
-export function Inject(injectionKeys: Array<string>) {
+export function Inject(dependencies: Array<Object>) {
 
     return function (target: any, decoratedPropertyName? : string): void {
          let targetType : Function;
@@ -19,8 +19,13 @@ export function Inject(injectionKeys: Array<string>) {
 
         let serviceClassName = target.prototype.constructor.name;
 
-        for (let injectKey of injectionKeys) {
-            container.addServiceInjection(serviceClassName, injectKey);
+        // for each [{ other: '@ither.service' }]
+        for (let dependecy of dependencies) {
+            // then { other: '@other.service' }
+            for (let propertyName in dependecy) {
+                let injectionKey = dependecy[propertyName];
+                container.addServiceInjection(serviceClassName, injectionKey, propertyName);
+            }
         }
     };
 }

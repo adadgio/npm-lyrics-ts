@@ -64,7 +64,7 @@ export class App {
     private middleware(): void
     {
         // tell express to parse incoming body from json to object
-        // this.express.use(parser.json());
+        this.express.use(parser.json());
         this.express.use(parser.urlencoded({ extended: false }));
     }
 
@@ -79,7 +79,7 @@ export class App {
         // automatically read here by ts (??). Strange but it works
         // router bridge is the one responsible for creating the ctrl instances
         for (let ctrl in controllers) {
-            this.log(`app.ts: Controller ${ctrl} read by ts compiler on boot`, 0);
+            this.log(`app.ts: Controller ${ctrl} read by ts compiler on boot`, 'whisper');
             // let controller = new controllers[ctrl](this);
         }
 
@@ -93,7 +93,7 @@ export class App {
         this.express.use('/', this.router);
         this.express.listen(this.config.get('framework.express.port'));
     }
-    
+
     /**
      * Get a service from the container.
      */
@@ -132,18 +132,27 @@ export class App {
      * Logs messages to the console
      * happens only if debug mode is on
      */
-    public log(msg: string, priority: number | null = 1): void
+    public log(msg: string, mode: string): void
     {
         if (this.xdebug === false) { return; }
 
-        switch (priority) {
-            case 1:
+        switch (mode) {
+            case 'whisper':
+                Console.whisper(msg);
+            break;
+            case 'log':
+                Console.log(msg);
+            break;
+            case 'info':
                 Console.info(msg);
             break;
-            case 2:
+            case 'warn':
                 Console.warn(msg);
             break;
-            case 3:
+            case 'kernel':
+                Console.kernel(msg);
+            break;
+            case 'error':
                 Console.error(msg);
             break;
             default:

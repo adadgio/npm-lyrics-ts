@@ -6,7 +6,7 @@ export class BaseController
 
     constructor(app: App) {
         this.app = app;
-        this.app.log('base-controller.ts: Controller constructor called', 0);
+        this.app.log('base-controller.ts: Controller constructor called', 'whisper');
     }
 
     protected get(serviceName: string) {

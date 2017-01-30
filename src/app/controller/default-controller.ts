@@ -1,7 +1,7 @@
-import { App }                          from './../../@lyrics/core';
-import { Route, Controller, Inject }    from './../../@lyrics/routing';
-import { BaseController }               from './../../@lyrics/controller';
-import { Request, Response }            from './../../@lyrics/http';
+import { App, Console }                     from './../../@lyrics/core';
+import { Route, Controller, Inject }        from './../../@lyrics/routing';
+import { BaseController }                   from './../../@lyrics/controller';
+import { Request, Response, JsonResponse }  from './../../@lyrics/http';
 
 @Controller('/default')
 export class DefaultController extends BaseController
@@ -13,22 +13,25 @@ export class DefaultController extends BaseController
     @Route('/hello', {
         type: 'GET'
     })
-    indexAction()
+    indexAction(request: Request)
     {
-        console.log('EXECUTED METHOD DefaultController::indexAction()');
+        let req = request.getRequest();
         let test = this.get('test.service');
-        test.sayHi('sdf');
-        
-        // console.log(this.app);
+        let body = req.body;
+
         // example, access app container registered service
         // let test = this.app.get('test.service');
         // let name = this.app.config.get('my_stuff.name');
-        // console.log(this.app);
+        
+        // do some heavy lifting and send back response
+        let greeting = this.getTitle() + ' ' + test.greet('Romain');
 
-        return this.test(3);
+        // return a valid response object
+        return new Response(greeting);
+        // return new JsonResponse({ greeting: greeting });
     }
 
-    private test(a: number) {
-        return a * 54;
+    private getTitle() {
+        return 'Professor';
     }
 }

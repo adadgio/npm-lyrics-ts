@@ -2,10 +2,12 @@
  * A bridge with express and the route container
  * to actually set route listeners
  */
-import * as express from 'express';
-import * as container from './../core/container';
-import { App, Console } from './../core';
-import { RouteMetadata, ActionTypes } from './metadata';
+import 'reflect-metadata';
+import * as express             from 'express';
+import * as container           from './../core/container';
+import { App, Console }         from './../core';
+import { RouteMetadata, ActionTypes }       from './metadata';
+import { Request, Response, JsonResponse }  from './../http';
 
 class RouterBridgeSingleton {
     private debuggedRoutes: Array<string>;
@@ -28,41 +30,64 @@ class RouterBridgeSingleton {
     }
 
     debug() {
-        Console.info('ROUTER DEBUG');
-
+        let app: any = container.getApp();
         for (let routeDebugPath of this.debuggedRoutes) {
-            Console.info(routeDebugPath);
+            app.log(`router-bridge.ts ${routeDebugPath}`, 'info');
         }
     }
 
     private expressRouterAddRoute(basePath:string, metadata: RouteMetadata) {
         let app: any = container.getApp();
-        let path = this.joinPathes(basePath, metadata.path);
-        
+        let path = this.joinPathes(basePath, metadata.getPath());
+
         let ctrlTarget = container.getCtrlTarget(metadata.getParentClassName()),
             ctrlInstance = new ctrlTarget(app),
-            methodAction = ctrlInstance[metadata.methodName];
+            methodAction = ctrlInstance[metadata.getMethodName()];
+
 
         switch (metadata.getType()) {
             case ActionTypes.GET:
+                // let args = this.argsFromReflectionParams(metadata);
+                // console.log(args);
 
-                let args = [];
                 app.router.get(path, (req, res, next) => {
-                    app.log(`router-bridge.ts Route called -x ${ActionTypes.GET} ${path}`, 0);
+                    let args = [];
+                    app.log(`router-bridge.ts REQ ${path} -x ${ActionTypes.GET}`, 'info');
+
+                    for (let reflParam of metadata.getReflectionParams()) {
+                        let paramTyping = reflParam.prototype.constructor.name;
+
+                        if (paramTyping === 'Request') {
+                            let request = new Request(req);
+                            args.push(request);
+                        }
+                    }
+
                     let result = methodAction.apply(ctrlInstance, args);
-                    // methodAction(args);
-                    // res.json({ message: `It works!` });
-                    res.json({ message: `It works!` });
+
+                    if (result instanceof Response) {
+                        app.log(`router-bridge.ts RSP ${path} -x ${ActionTypes.GET} text/plain`, 'info');
+                        res.send(result.getContent());
+
+                    } else if (result instanceof JsonResponse) {
+                        app.log(`router-bridge.ts RSP ${path} -x ${ActionTypes.GET} application/json`, 'info');
+                        res.json(result.getJsonContent());
+
+                    } else if (result instanceof String || typeof result === 'number') {
+                        app.log(`router-bridge.ts RSP ${path} -x ${ActionTypes.GET} text/plain`, 'info');
+                        res.send(result.toString());
+
+                    } else {
+                        app.log('Controller response must be a string or an instance of Response or JsonResponse', 'error');
+                    }
                 });
 
             break;
-
             case ActionTypes.POST:
                 app.router.post(path, (req, res, next) => {
                     res.json({ message: `It works!` });
                 });
             break;
-
             default:
                 // not applicable
             break;

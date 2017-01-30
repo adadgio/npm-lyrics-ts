@@ -56,52 +56,60 @@ export function registerService(name: string, target?: Object) {
     let className = (undefined === target) ? null : target['name'];
      _$_container.services[name] = { target: target, inited: false, instance: null, className: className };
 }
-export function addServiceInjection(name: string, injectionKey: string) {
+export function addServiceInjection(name: string, injectionKey: string, propertyName: string) {
     if (typeof _$_container.injections[name] === 'undefined') {
         _$_container.injections[name] = [];
     }
 
-    _$_container.injections[name].push(injectionKey);
+    _$_container.injections[name].push({ key: injectionKey, property: propertyName });
 }
 export function initService(name: string) {
-    _$_container.app.log(`container.ts: Service ${name} inited`, 0);
-    
-    let args = [],
-        serviceInstance = null,
-        selfKlassName =  _$_container.services[name].className;
+    _$_container.app.log(`container.ts: Service ${name} inited`, 'kernel');
 
-    if (typeof _$_container.injections[selfKlassName] !== 'undefined') {
-        for (let paramName of _$_container.injections[selfKlassName]) {
+    let serviceInstance = new _$_container.services[name].target();
+    _$_container.services[name].instance = serviceInstance;
 
-            if (isAliased(paramName)) {
+    let diArgs = {},
+        selfKlass = _$_container.services[name].className;
+
+    if (typeof _$_container.injections[selfKlass] !== 'undefined') {
+
+        for (let dependecy of _$_container.injections[selfKlass]) {
+
+            if (isAliased(dependecy.key)) {
                 // the param is aliased with "@", its a service we need to inject
 
-                if (unalias(paramName) === name) {
-                    Console.exception(`container.ts Cirular reference detected, tried to inject ${paramName} into ${name}`);
+                if (unalias(dependecy.key) === name) {
+                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
                 }
 
-                let serviceInstance = getServiceInstance(unalias(paramName));
-                // let serviceInstance = _$_container.app.get(unalias(paramName));
-                serviceInstance.sayBye();
-                args.push(serviceInstance);
-                console.log(serviceInstance.sayBye());
-                // args.push(serviceInstance);
-                // let serviceInstance = new _$_container.services[paramName].target();
+                let diInstance = getServiceInstance(unalias(dependecy.key));
+                diArgs[dependecy.property] = diInstance;
 
+            } else if (isPercent(dependecy.key)) {
+                // else its not a service but a parameter from config to inject
+                let paramName = unpercent(dependecy.key);
+                let paramValue = _$_container.app.config.get(paramName);
+                diArgs[dependecy.property] = paramValue;
+                
             } else {
-                // else its not a service but a param to inject
+                // its nothing
+                Console.exception(`container.ts Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
             }
         }
     }
 
-    _$_container.services[name].instance = new _$_container.services[name].target('sdg');
+    if (typeof _$_container.services[name].instance['injector'] === 'function') {
+        _$_container.services[name].instance['injector'].apply(serviceInstance, [diArgs]);
+    }
+
 }
 export function getServiceInstance(name: string) {
      if (!isServiceInited(name)) {
          initService(name);
      }
 
-     _$_container.app.log(`container.ts: Service ${name} requested`, 0);
+     _$_container.app.log(`container.ts: Service ${name} requested`, 'whisper');
      return _$_container.services[name].instance;
 }
 
@@ -161,5 +169,5 @@ function isPercent(string: string) {
     return string.indexOf('%') === -1 ? false : true;
 }
 function unpercent(string: string) {
-    return string.replace(/^%*%$/, '');
+    return string.replace(/%/g, '');
 }

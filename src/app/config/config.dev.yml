@@ -3,4 +3,5 @@ framework:
         port: 8182
 
 my_stuff:
-    name: "Romain"
+    name: Romain
+    age:  31
