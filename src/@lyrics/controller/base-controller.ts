@@ -12,6 +12,6 @@ export class BaseController
     protected get(serviceName: string) {
         console.log(serviceName);
         this.app.log('Requested service ' + serviceName);
-        // return this.app.get(serviceName);
+        return this.app.get(serviceName);
     }
 }

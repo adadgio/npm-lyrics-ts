@@ -18,9 +18,8 @@ export class DefaultController extends BaseController
         console.log('EXECUTED METHOD');
 
         let test = this.get('test.service');
-        // test.sayHi('sdf');
+        test.sayHi('sdf');
         
-
         // console.log(this.app);
         // example, access app container registered service
         // let test = this.app.get('test.service');

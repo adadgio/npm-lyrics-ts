@@ -58,6 +58,7 @@ export class App {
         // declare and prepare router
         this.router = express.Router();
         this.routing();
+        this.killHooks();
     }
 
     private middleware(): void
@@ -92,11 +93,11 @@ export class App {
         this.express.use('/', this.router);
         this.express.listen(this.config.get('framework.express.port'));
     }
-    
+
     /**
      * Get a service from the container.
      */
-    public get(name: string): Object {
+    public get(name: string) {
         // init service with dependency injections in case its not
         if (!container.isServiceRegistered(name)) {
             // service was not registered
@@ -151,7 +152,15 @@ export class App {
         }
     }
 
-    getInfo() {
+    /**
+     * Properly kill the node js
+     * process when errors occur.
+     */
+    private killHooks() {
+
+    }
+
+    public getInfo() {
         return `A lyrics application`;
     }
 

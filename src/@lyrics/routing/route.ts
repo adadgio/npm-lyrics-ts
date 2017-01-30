@@ -15,11 +15,10 @@ export function Route(route: string, options: RouteOptions): any {
         let type = Reflect.getMetadata('design:type', target, methodName);
         let paramsMeta = Reflect.getMetadata('design:paramtypes', target, methodName);
         
-
-        descriptor.value = function (...args: any[]) {
-            let result = originalMethod.apply(target, args);
-            return result;
-        };
+        // descriptor.value = function (...args: any[]) {
+        //     let result = originalMethod.apply(target, args);
+        //     return result;
+        // };
 
         // string name of the parent class the method belongs to
         let parentClassName = target.constructor.prototype.constructor.name;
