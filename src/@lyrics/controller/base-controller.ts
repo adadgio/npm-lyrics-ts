@@ -6,12 +6,10 @@ export class BaseController
 
     constructor(app: App) {
         this.app = app;
-        this.app.log('Base controller constructed');
+        this.app.log('base-controller.ts: Controller constructor called', 0);
     }
 
     protected get(serviceName: string) {
-        console.log(serviceName);
-        this.app.log('Requested service ' + serviceName);
         return this.app.get(serviceName);
     }
 }

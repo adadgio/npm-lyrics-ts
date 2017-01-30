@@ -1,0 +1,53 @@
+/**
+ * The route annotation
+ */
+import 'reflect-metadata';
+import * as container from './../core/container';
+import { InjectMetadata } from './metadata';
+
+// const requiredMetadataKey = Symbol('Inject');
+export function Inject(injectionKey: string) {
+    // console.log(injectionKey);
+
+    return function (target: Object, methodName: string, index : number) {
+        // Note: The name of the method is undefined when
+        // the  decorator is applied on a constructor parameter
+
+        // Note: class name will just be 'Function' if its a constructor
+        // let serviceClassName = target.constructor.name;
+        // serviceClassName = (serviceClassName === 'Function') ? 'constructor' : serviceClassName;
+        // console.log(Object.getPrototypeOf(target));
+        // console.log(target);
+
+        target['test'] = 43;
+
+        let info = Reflect.getMetadata('design:type', target, methodName);
+        let types = Reflect.getMetadata('design:paramtypes', target, methodName);
+        console.log(types);
+
+        // console.log(targetClass, methodName, index);
+        const metadata = new InjectMetadata(injectionKey);
+    };
+}
+
+
+
+// export function Inject(targetClass: any, methodName: string | symbol, index : number): any {
+//     // Note: The name of the method is undefined when
+//     //  the  decorator is applied on a constructor parameter
+//
+//     // let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, key) || [];
+//     // console.log(existingRequiredParameters);
+//
+//     console.log(targetClass, methodName, index);
+//
+//     var types = Reflect.getMetadata('design:paramtypes', targetClass, methodName);
+//     // let params = Reflect.getOwnMetadata('design:paramtypes', target, key) || [];
+//     console.log(types);
+//
+//     // if (Array.isArray(target[metadataKey])) {
+//     //     target[metadataKey].push(index);
+//     // } else {
+//     //     target[metadataKey] = [index];
+//     // }
+// }

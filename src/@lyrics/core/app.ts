@@ -8,7 +8,7 @@ import * as dotenv  from 'dotenv';
 import * as express from 'express';
 import * as parser  from 'body-parser';
 
-import * as container from './../routing/container';
+import * as container from './../core/container';
 import * as controllers from './../../app/controller';
 import { RouterBridge } from './../routing';
 import { Console, Argument, Configuration } from './';
@@ -79,7 +79,7 @@ export class App {
         // automatically read here by ts (??). Strange but it works
         // router bridge is the one responsible for creating the ctrl instances
         for (let ctrl in controllers) {
-            this.log(`Controller ${ctrl} read by typescript by compiler`, 0);
+            this.log(`app.ts: Controller ${ctrl} read by ts compiler on boot`, 0);
             // let controller = new controllers[ctrl](this);
         }
 
@@ -93,7 +93,7 @@ export class App {
         this.express.use('/', this.router);
         this.express.listen(this.config.get('framework.express.port'));
     }
-
+    
     /**
      * Get a service from the container.
      */

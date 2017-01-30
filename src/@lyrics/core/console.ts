@@ -30,25 +30,30 @@ export class ConsoleSingleton
     BgMagenta   = '\x1b[45m';
     BgCyan      = '\x1b[46m';
     BgWhite     = '\x1b[47m';
-    
+
     log(text: string): void {
         // yellow
-        console.log('\x1b[37m%s\x1b[0m: ', text);
+        console.log('\x1b[37m%s\x1b[0m', text);
     }
 
     warn(text: string): void {
         // yellow
-        console.log('\x1b[33m%s\x1b[0m: ', text);
+        console.log('\x1b[33m%s\x1b[0m', text);
     }
 
     error(text: string): void {
         // yellow
-        console.log('\x1b[31m%s\x1b[0m: ', text);
+        console.log('\x1b[31m%s\x1b[0m', text);
     }
 
     info(text: string): void {
         // cyan
         console.log('\x1b[36m%s\x1b[0m', text);
+    }
+
+    exception(text: string): void {
+        console.log('\x1b[41m%s\x1b[0m', text);
+        throw new Error('Exception error throw');
     }
 }
 

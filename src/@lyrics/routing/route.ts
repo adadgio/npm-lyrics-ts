@@ -2,7 +2,7 @@
  * The route annotation
  */
 import 'reflect-metadata';
-import * as container from './container';
+import * as container from './../core/container';
 import { RouteOptions, RouteMetadata } from './metadata';
 
 export function Route(route: string, options: RouteOptions): any {

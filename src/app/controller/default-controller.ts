@@ -13,10 +13,9 @@ export class DefaultController extends BaseController
     @Route('/hello', {
         type: 'GET'
     })
-    indexAction(name: string)
+    indexAction()
     {
-        console.log('EXECUTED METHOD');
-
+        console.log('EXECUTED METHOD DefaultController::indexAction()');
         let test = this.get('test.service');
         test.sayHi('sdf');
         

@@ -3,7 +3,7 @@
  * to actually set route listeners
  */
 import * as express from 'express';
-import * as container from './../routing/container';
+import * as container from './../core/container';
 import { App, Console } from './../core';
 import { RouteMetadata, ActionTypes } from './metadata';
 
@@ -38,16 +38,17 @@ class RouterBridgeSingleton {
     private expressRouterAddRoute(basePath:string, metadata: RouteMetadata) {
         let app: any = container.getApp();
         let path = this.joinPathes(basePath, metadata.path);
-
+        
         let ctrlTarget = container.getCtrlTarget(metadata.getParentClassName()),
             ctrlInstance = new ctrlTarget(app),
             methodAction = ctrlInstance[metadata.methodName];
-            
+
         switch (metadata.getType()) {
             case ActionTypes.GET:
 
                 let args = [];
                 app.router.get(path, (req, res, next) => {
+                    app.log(`router-bridge.ts Route called -x ${ActionTypes.GET} ${path}`, 0);
                     let result = methodAction.apply(ctrlInstance, args);
                     // methodAction(args);
                     // res.json({ message: `It works!` });
@@ -72,10 +73,6 @@ class RouterBridgeSingleton {
 
     private joinPathes(basePath: string, path: string) {
         return '/' + this.removeTrailingSlashes(basePath) + '/' + this.removeTrailingSlashes(path);
-    }
-
-    private unalias(string: string) {
-        return string.replace(/^@/, '');
     }
 
     private removeTrailingSlashes(string: string) {

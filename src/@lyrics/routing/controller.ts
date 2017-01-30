@@ -1,7 +1,7 @@
 /**
  * The @Controller annotation function.
  */
-import * as container from './container';
+import * as container from './../core/container';
 import { ControllerMetadata } from './metadata';
 
 export function Controller(route: string): any {
@@ -12,6 +12,5 @@ export function Controller(route: string): any {
         const metadata = new ControllerMetadata(className, route, object);
 
         container.addControllerMeta(metadata);
-
    };
 }
