@@ -25,12 +25,17 @@
     "@types/express": "^4.0.34",
     "@types/node": "^7.0.0",
     "@types/request": "0.0.39",
+    "@types/twig": "0.0.28",
     "@types/yamljs": "^0.2.30",
     "body-parser": "^1.15.2",
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
+    "eyes": "^0.1.8",
+    "pdf-extract": "^1.0.9",
+    "pdf2json": "^1.1.7",
     "reflect-metadata": "^0.1.9",
     "request": "^2.79.0",
+    "twig": "^0.10.3",
     "yamljs": "^0.2.8"
   }
 }

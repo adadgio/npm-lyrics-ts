@@ -20,7 +20,6 @@ export class RouteMetadata {
         this.methodName = methodName;
         this.descriptor = descriptor;
 
-
         // use reflection api to determine parameter types
         let reflection = Reflect.getMetadata('design:paramtypes', target, methodName);
         this.reflectionParams = reflection;
@@ -36,6 +35,10 @@ export class RouteMetadata {
 
     getType() {
         return this.type;
+    }
+    
+    getRequirements() {
+        return (typeof this.options['requirements'] === 'object') ? this.options['requirements'] : null;
     }
 
     getParentClassName() {

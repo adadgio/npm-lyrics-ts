@@ -10,8 +10,13 @@ import * as parser  from 'body-parser';
 
 import * as container from './../core/container';
 import * as controllers from './../../app/controller';
-import { RouterBridge } from './../routing';
+import { RouterBridge, RouterUtils } from './../routing';
 import { Console, Argument, Configuration } from './';
+
+interface ExpressError {
+    status?: number;
+    message?: string;
+}
 
 export class App {
     private readonly root: string;
@@ -23,7 +28,6 @@ export class App {
     private xdebug: boolean;
     private express: express.Application;
     private services: Object = {};
-    private webroot: string = null;
 
     constructor()
     {
@@ -43,6 +47,7 @@ export class App {
 
         // save configuration parameters into app
         // and basic default app configuration vars
+        this.root = __dirname+'/../..';
         this.xdebug = false;
         this.config = new Configuration();
         this.config.inject(yamlConfig);
@@ -91,6 +96,25 @@ export class App {
         // tell the express app to all all the
         // defined routes from this base point
         this.express.use('/', this.router);
+        
+        // catch express errors (like body parse errors, etc) to be able to
+        // return correct error response when application/json is detected
+        this.express.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+            if (err instanceof SyntaxError) {
+                let errorMsg = (this.xdebug === false) ? 'Internal express SyntaxError' : err; // debug or not, show full error ?
+
+                if (RouterUtils.isJsonRequest(req)) {
+                    res.statusCode = 500;
+                    res.json({ type: 'error', error: err.toString() });
+                } else {
+                    res.statusCode = 500;
+                    res.send(errorMsg);
+                }
+            } else {
+                next();
+            }
+        });
+
         this.express.listen(this.config.get('framework.express.port'));
     }
 
@@ -171,6 +195,15 @@ export class App {
 
     public getInfo() {
         return `A lyrics application`;
+    }
+
+    /**
+     * Get app environment.
+     * Environment
+     */
+    public getRootDir()
+    {
+        return this.root;
     }
 
     /**

@@ -9,7 +9,7 @@ export function Route(route: string, options: RouteOptions): any {
     return function (target: Function, methodName: string, descriptor: TypedPropertyDescriptor<any>) {
         // save a reference to the original method
         let originalMethod = descriptor.value;
-
+        
         // descriptor.value = function (...args: any[]) {
         //     let result = originalMethod.apply(target, args);
         //     return result;
