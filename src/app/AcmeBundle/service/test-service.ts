@@ -1,6 +1,5 @@
-import { Service, ServiceInterface } from './../../@lyrics/component';
-import { Inject } from './../../@lyrics/routing';
-import { OtherService } from './other-service';
+import { Service, ServiceInterface } from './../../../@lyrics/component';
+import { Inject } from './../../../@lyrics/routing';
 
 @Inject([
     { age:   '%my_stuff.age%' },
@@ -18,7 +17,7 @@ export class TestService extends Service
         // you need this for proper di injection
         super();
     }
-    
+
     public greet(name: string) {
         let bye = this.injected.other.sayBye();
         let info = `${name} (${this.injected.age} years old)`;

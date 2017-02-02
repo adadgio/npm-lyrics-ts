@@ -1,7 +1,7 @@
-import { App, Console }                     from './../../@lyrics/core';
-import { Route, Controller, Inject }        from './../../@lyrics/routing';
-import { BaseController }                   from './../../@lyrics/controller';
-import { Request, Response, JsonResponse }  from './../../@lyrics/http';
+import { App, Console }                     from './../../../@lyrics/core';
+import { Route, Controller, Inject }        from './../../../@lyrics/routing';
+import { BaseController }                   from './../../../@lyrics/controller';
+import { Request, Response, JsonResponse }  from './../../../@lyrics/http';
 
 @Controller('/pdf')
 export class PdfController extends BaseController

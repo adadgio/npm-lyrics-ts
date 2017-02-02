@@ -3,7 +3,8 @@
  * command line arguments in your app.
  * Pattern: singleton
  */
-import * as fs      from 'fs';
+import * as fs from 'fs';
+import * as moment from 'moment';
 
 export class ConsoleSingleton
 {
@@ -34,15 +35,22 @@ export class ConsoleSingleton
     BgCyan      = '\x1b[46m';
     BgWhite     = '\x1b[47m';
 
-    justNow() {
-        let date = new Date();
-        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    private env: string;
 
+    constructor() {
+        this.env = 'dev';
     }
 
     writeLog(text: string) {
-        let filepath = __dirname + '/../../app/log/debug.log';
-        fs.appendFileSync(filepath, `[${this.justNow()}]\n${text}\n`);
+        let date = moment().format('Y-MM-DD');
+        let datetime = moment().format('Y-MM-DD HM-mm-s');
+        let filepath = __dirname + `/../../app/log/${this.env}-${date}-debug.log`;
+        
+        fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
+    }
+
+    setEnv(env: string) {
+        this.env = env;
     }
 
     log(text: string): void {

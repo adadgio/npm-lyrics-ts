@@ -91,7 +91,7 @@ export function initService(name: string) {
                 let paramName = unpercent(dependecy.key);
                 let paramValue = _$_container.app.config.get(paramName);
                 diArgs[dependecy.property] = paramValue;
-                
+
             } else {
                 // its nothing
                 Console.exception(`container.ts Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);

@@ -2,14 +2,13 @@
  * Main app component wrapper
  * Handle env variables, express and loads routing
  */
-import * as fs      from 'fs';
-import * as yaml    from 'yamljs';
-import * as dotenv  from 'dotenv';
-import * as express from 'express';
-import * as parser  from 'body-parser';
+import * as fs       from 'fs';
+import * as yaml     from 'yamljs';
+import * as express  from 'express';
+import * as parser   from 'body-parser';
+import * as systemjs from 'systemjs';
 
 import * as container from './../core/container';
-import * as controllers from './../../app/controller';
 import { RouterBridge, RouterUtils } from './../routing';
 import { Console, Argument, Configuration } from './';
 
@@ -28,16 +27,16 @@ export class App {
     private xdebug: boolean;
     private express: express.Application;
     private services: Object = {};
+    private controllers: any;
 
     constructor()
     {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
+        Console.setEnv(this.env); // for clean debug logs
 
-        // then load the correct ./config environment file and
-        // read its values with the dotenv module
-        // dotenv.config({ path: __dirname + '/../app/config/conf.' + this.env });
+        // then load the correct config environment file
         let confpath = __dirname + '/../../app/config/config.'+ this.env +'.yml';
         if (!fs.existsSync(confpath)) {
             throw new Error('Config file not found at '+ confpath);
@@ -83,7 +82,7 @@ export class App {
         // there is nothing to do... the annotations are
         // automatically read here by ts (??). Strange but it works
         // router bridge is the one responsible for creating the ctrl instances
-        for (let ctrl in controllers) {
+        for (let ctrl in this.controllers) {
             this.log(`app.ts: Controller ${ctrl} read by ts compiler on boot`, 'whisper');
             // let controller = new controllers[ctrl](this);
         }
@@ -96,24 +95,24 @@ export class App {
         // tell the express app to all all the
         // defined routes from this base point
         this.express.use('/', this.router);
-        
+
         // catch express errors (like body parse errors, etc) to be able to
         // return correct error response when application/json is detected
-        this.express.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (err instanceof SyntaxError) {
-                let errorMsg = (this.xdebug === false) ? 'Internal express SyntaxError' : err; // debug or not, show full error ?
-
-                if (RouterUtils.isJsonRequest(req)) {
-                    res.statusCode = 500;
-                    res.json({ type: 'error', error: err.toString() });
-                } else {
-                    res.statusCode = 500;
-                    res.send(errorMsg);
-                }
-            } else {
-                next();
-            }
-        });
+        // this.express.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        //     if (err instanceof SyntaxError) {
+        //         let errorMsg = (this.xdebug === false) ? 'Internal express SyntaxError' : err; // debug or not, show full error ?
+        //
+        //         if (RouterUtils.isJsonRequest(req)) {
+        //             res.statusCode = 500;
+        //             res.json({ type: 'error', error: err.toString() });
+        //         } else {
+        //             res.statusCode = 500;
+        //             res.send(errorMsg);
+        //         }
+        //     } else {
+        //         next();
+        //     }
+        // });
 
         this.express.listen(this.config.get('framework.express.port'));
     }
@@ -138,9 +137,45 @@ export class App {
     /**
      * Set service name and prototype into the container
      */
-    public register(name: string, target: Object)
+    public import(bundle: string): App
+    {
+        let srvcsPath = `./../../app/${bundle}/service`;
+        let ctrlsPath = `./../../app/${bundle}/controller`;
+
+        // load all controllers from AcmeBundle/controller/index.ts
+        // there is nothing to do afterwards, typescript will read
+        // controllers annotations and router bridge then know that
+        // it will need to create instances at build time
+        let controllers = require(ctrlsPath);
+
+        // register all services in the container
+        // from AcmeBundle/service/index.ts
+        let services = require(srvcsPath);
+        for (let className in services) {
+            let service = services[className];
+            let serviceId = this.createServiceName(className);
+            this.register(serviceId, service);
+        }
+
+        return this;
+    }
+    
+    /**
+     * Set service name and prototype into the container
+     */
+    public register(name: string, target: Object): App
     {
         container.registerService(name, target);
+        return this;
+    }
+
+    /**
+     * Create service name from AcmeService to acme.service
+     */
+    private createServiceName(className: string): string
+    {
+        let parts = className.match(/[A-Z][a-z]+/g).map(s => { return s.toLowerCase(); });
+        return parts.join('.');
     }
 
     /**
@@ -149,6 +184,7 @@ export class App {
     public debug(value: boolean): App
     {
         this.xdebug = value;
+
         return this;
     }
 

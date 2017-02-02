@@ -4,7 +4,6 @@
 'use strict';
 let hrstart = process.hrtime();
 import { App, Cluster } from './@lyrics/core';
-import { TestService, OtherService, PdfService } from './app/service';
 
 /**
  * Let the app use clusters
@@ -14,10 +13,10 @@ let clustering = new Cluster();
 clustering.start(f => {
     let app = new App();
 
-    app.debug(true);
-    app.register('test.service', TestService);
-    app.register('other.service', OtherService);
-    app.register('pdf.service', PdfService);
+    app
+        .debug(true)
+        .import('AcmeBundle') // to import all AcmeBundle/controller|service/<controllers index.ts>
+    ;
 
     app.run();
 

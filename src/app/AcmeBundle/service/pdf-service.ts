@@ -1,5 +1,5 @@
-import { Service, ServiceInterface } from './../../@lyrics/component';
-import { Inject } from './../../@lyrics/routing';
+import { Service, ServiceInterface } from './../../../@lyrics/component';
+import { Inject } from './../../../@lyrics/routing';
 
 let inspect = require('eyes').inspector({ maxLength: 20000 });
 let extract = require('pdf-extract');
