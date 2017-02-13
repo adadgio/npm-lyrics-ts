@@ -3,7 +3,10 @@
  * command line arguments in your app.
  * Pattern: singleton
  */
-export class ConsoleSingleton
+import * as fs from 'fs';
+import * as moment from 'moment';
+
+class ConsoleSingleton
 {
     Reset       = '\x1b[0m';
     Bright      = '\x1b[1m';
@@ -21,6 +24,7 @@ export class ConsoleSingleton
     FgMagenta   = '\x1b[35m';
     FgCyan      = '\x1b[36m';
     FgWhite     = '\x1b[37m';
+    FgLitGray  =  '\x1b[90m';
 
     BgBlack     = '\x1b[40m';
     BgRed       = '\x1b[41m';
@@ -30,25 +34,59 @@ export class ConsoleSingleton
     BgMagenta   = '\x1b[45m';
     BgCyan      = '\x1b[46m';
     BgWhite     = '\x1b[47m';
-    
+
+    private env: string;
+
+    constructor() {
+        this.env = 'dev';
+    }
+
+    writeLog(text: string) {
+        let date = moment().format('Y-MM-DD');
+        let datetime = moment().format('Y-MM-DD HM-mm-s');
+        let filepath = __dirname + `/../../app/log/${this.env}-${date}-debug.log`;
+
+        fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
+    }
+
+    setEnv(env: string) {
+        this.env = env;
+    }
+
     log(text: string): void {
-        // yellow
-        console.log('\x1b[37m%s\x1b[0m: ', text);
+        this.writeLog(text);
+        console.log('\x1b[37m%s\x1b[0m', text);
+    }
+
+    kernel(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[107;35m%s\x1b[0m', text);
     }
 
     warn(text: string): void {
-        // yellow
-        console.log('\x1b[33m%s\x1b[0m: ', text);
+        this.writeLog(text);
+        console.log('\x1b[33m%s\x1b[0m', text);
     }
 
     error(text: string): void {
-        // yellow
-        console.log('\x1b[31m%s\x1b[0m: ', text);
+        this.writeLog(text);
+        console.log('\x1b[31m%s\x1b[0m', text);
     }
 
     info(text: string): void {
-        // cyan
+        this.writeLog(text);
         console.log('\x1b[36m%s\x1b[0m', text);
+    }
+
+    whisper(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[97m%s\x1b[0m', text);
+    }
+
+    exception(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[41m%s\x1b[0m', text);
+        throw new Error('Exception error throw');
     }
 }
 

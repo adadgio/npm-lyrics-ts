@@ -2,23 +2,30 @@
  * The route annotation
  */
 import 'reflect-metadata';
-import * as container from './container';
+import * as container       from './../core/container';
+import { InjectMetadata }   from './metadata';
 
 // const requiredMetadataKey = Symbol('Inject');
+export function Inject(dependencies: Array<Object>) {
 
-export function Inject(target: any, key : string | symbol, index : number): any {
-    let metadataKey = `__log_${key}_parameters`;
-    // console.log(metadataKey);
-    // console.log(target, key, index);
+    return function (target: any, decoratedPropertyName? : string): void {
+         let targetType : Function;
 
-    // let paramInfo = target[]
+        if (typeof target === 'function' && decoratedPropertyName === undefined) {
+            targetType = target;
+        } else {
+            targetType = target.constructor;
+        }
 
-    // let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, key) || [];
-    // console.log(existingRequiredParameters);
+        let serviceClassName = target.prototype.constructor.name;
 
-    // if (Array.isArray(target[metadataKey])) {
-    //     target[metadataKey].push(index);
-    // } else {
-    //     target[metadataKey] = [index];
-    // }
+        // for each [{ other: '@ither.service' }]
+        for (let dependecy of dependencies) {
+            // then { other: '@other.service' }
+            for (let propertyName in dependecy) {
+                let injectionKey = dependecy[propertyName];
+                container.addServiceInjection(serviceClassName, injectionKey, propertyName);
+            }
+        }
+    };
 }

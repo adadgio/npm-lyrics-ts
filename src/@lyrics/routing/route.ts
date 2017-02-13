@@ -1,8 +1,7 @@
 /**
  * The route annotation
  */
-import 'reflect-metadata';
-import * as container from './container';
+import * as container from './../core/container';
 import { RouteOptions, RouteMetadata } from './metadata';
 
 export function Route(route: string, options: RouteOptions): any {
@@ -10,10 +9,6 @@ export function Route(route: string, options: RouteOptions): any {
     return function (target: Function, methodName: string, descriptor: TypedPropertyDescriptor<any>) {
         // save a reference to the original method
         let originalMethod = descriptor.value;
-
-        // use reflection api to determine parameter types
-        let type = Reflect.getMetadata('design:type', target, methodName);
-        let paramsMeta = Reflect.getMetadata('design:paramtypes', target, methodName);
         
         // descriptor.value = function (...args: any[]) {
         //     let result = originalMethod.apply(target, args);

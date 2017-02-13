@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as twig from 'twig';
 import { App } from './../core/app';
 
 export class BaseController
@@ -6,12 +8,20 @@ export class BaseController
 
     constructor(app: App) {
         this.app = app;
-        this.app.log('Base controller constructed');
     }
 
     protected get(serviceName: string) {
-        console.log(serviceName);
-        this.app.log('Requested service ' + serviceName);
         return this.app.get(serviceName);
+    }
+
+    private getChildClassName() {
+        return this.constructor.name;
+    }
+
+    protected render(template: string, data?: Object) {
+        let templateLocation = `${this.app.getRootDir()}/app/views/test.twig`;
+        // twig.renderFile(templateLocation, { foo: 'bar' }, (err, html) => {
+        //
+        // });
     }
 }

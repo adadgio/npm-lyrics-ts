@@ -1,4 +1,4 @@
-
+import 'reflect-metadata';
 import { RouteOptions } from './';
 
 export class RouteMetadata {
@@ -9,6 +9,7 @@ export class RouteMetadata {
     options: Object;
     type: 'GET'|'POST'|'PUT'|'DELETE';
     descriptor: PropertyDescriptor;
+    reflectionParams: any;
 
     constructor(parentClassName: string, path: string, options: RouteOptions, target: Function, methodName: string, descriptor: PropertyDescriptor) {
         this.parentClassName = parentClassName;
@@ -18,10 +19,26 @@ export class RouteMetadata {
         this.type = options.type;
         this.methodName = methodName;
         this.descriptor = descriptor;
+
+        // use reflection api to determine parameter types
+        let reflection = Reflect.getMetadata('design:paramtypes', target, methodName);
+        this.reflectionParams = reflection;
+    }
+
+    getPath() {
+        return this.path;
+    }
+
+    getReflectionParams() {
+        return this.reflectionParams;
     }
 
     getType() {
         return this.type;
+    }
+    
+    getRequirements() {
+        return (typeof this.options['requirements'] === 'object') ? this.options['requirements'] : null;
     }
 
     getParentClassName() {

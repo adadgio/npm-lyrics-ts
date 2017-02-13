@@ -2,10 +2,13 @@
  * A bridge with express and the route container
  * to actually set route listeners
  */
-import * as express from 'express';
-import * as container from './../routing/container';
-import { App, Console } from './../core';
-import { RouteMetadata, ActionTypes } from './metadata';
+import 'reflect-metadata';
+import * as express     from 'express';
+import * as container   from './../core/container';
+import { RouterUtils }  from './';
+import { Console, KernelEvents }            from './../core';
+import { RouteMetadata, ActionTypes }       from './metadata';
+import { Request, Response, JsonResponse }  from './../http';
 
 class RouterBridgeSingleton {
     private debuggedRoutes: Array<string>;
@@ -28,40 +31,60 @@ class RouterBridgeSingleton {
     }
 
     debug() {
-        Console.info('ROUTER DEBUG');
-
+        let app: any = container.getApp();
         for (let routeDebugPath of this.debuggedRoutes) {
-            Console.info(routeDebugPath);
+            // app .log(`router-bridge.ts ${routeDebugPath}`, 'info');
         }
     }
 
     private expressRouterAddRoute(basePath:string, metadata: RouteMetadata) {
         let app: any = container.getApp();
-        let path = this.joinPathes(basePath, metadata.path);
+        let path = RouterUtils.joinPathes(basePath, metadata.getPath());
 
         let ctrlTarget = container.getCtrlTarget(metadata.getParentClassName()),
             ctrlInstance = new ctrlTarget(app),
-            methodAction = ctrlInstance[metadata.methodName];
-            
+            methodAction = ctrlInstance[metadata.getMethodName()];
+
         switch (metadata.getType()) {
             case ActionTypes.GET:
-
-                let args = [];
                 app.router.get(path, (req, res, next) => {
-                    let result = methodAction.apply(ctrlInstance, args);
-                    // methodAction(args);
-                    // res.json({ message: `It works!` });
-                    res.json({ message: `It works!` });
+
+                    KernelEvents.emit('router:request', `router-bridge.ts REQ ${path} -x ${ActionTypes.GET}`);
+
+                    let info: any;
+
+                    let duration = RouterUtils.execTime(() => {
+                        let args = this.getActionMethodReflectedArgs(req, metadata);
+                        let result = methodAction.apply(ctrlInstance, args);
+
+                        info = this.sendResponse(result, res);
+                    });
+
+                    KernelEvents.emit('router:response', `router-bridge.ts RSP ${path} -x ${ActionTypes.GET} ${info.restype} (in ${duration})`);
                 });
 
             break;
-
             case ActionTypes.POST:
                 app.router.post(path, (req, res, next) => {
-                    res.json({ message: `It works!` });
+                    KernelEvents.emit('router:request', `router-bridge.ts REQ ${path} -x ${ActionTypes.POST}`);
+
+                    let info: any;
+                    let reqErrors = RouterUtils.checkRequirements(req, metadata);
+
+                    let duration = RouterUtils.execTime(() => {
+                        let args = this.getActionMethodReflectedArgs(req, metadata);
+                        let result = methodAction.apply(ctrlInstance, args);
+                        
+                        if (reqErrors.length === 0) {
+                            info = this.sendResponse(result, res);
+                        } else {
+                            info = this.sendErrorResponse(result, res, reqErrors);
+                        }
+                    });
+
+                    KernelEvents.emit('router:request', `router-bridge.ts RSP ${path} -x ${ActionTypes.POST} ${info.restype} (in ${duration})`);
                 });
             break;
-
             default:
                 // not applicable
             break;
@@ -70,16 +93,65 @@ class RouterBridgeSingleton {
         this.addDebuggedRoute(path, metadata);
     }
 
-    private joinPathes(basePath: string, path: string) {
-        return '/' + this.removeTrailingSlashes(basePath) + '/' + this.removeTrailingSlashes(path);
+    private sendResponse(result: any, res: express.Response) {
+        let info = { restype: null };
+
+        if (result instanceof Response) {
+            info.restype = 'text/plain';
+            res.send(result.getContent());
+
+        } else if (result instanceof JsonResponse) {
+            info.restype = 'application/json';
+            res.json(result.getJsonContent());
+
+        } else if (result instanceof String || typeof result === 'number') {
+            info.restype = 'text/plain';
+            res.send(result.toString());
+
+        } else {
+            throw Error('Controller response must be a string or an instance of Response or JsonResponse');
+        }
+
+        return info;
     }
 
-    private unalias(string: string) {
-        return string.replace(/^@/, '');
+    private sendErrorResponse(result: any, res: express.Response, errors: any) {
+        let info = { restype: null };
+
+        if (result instanceof Response) {
+            info.restype = 'text/html';
+            res.statusCode = 400;
+            res.send(`invalid request parameters:\n${errors.toString()}`);
+
+        } else if (result instanceof JsonResponse) {
+            info.restype = 'application/json';
+            res.statusCode = 400;
+            res.json({ type: 'error', message: `invalid request parameters`, details: errors });
+
+        } else if (result instanceof String || typeof result === 'number') {
+            info.restype = 'text/plain';
+            res.statusCode = 400;
+            res.send(`invalid request parameters:\n${errors.toString()}`);
+
+        } else {
+            throw Error('Controller response must be a string or an instance of Response or JsonResponse');
+        }
+
+        return info;
     }
 
-    private removeTrailingSlashes(string: string) {
-        return string.replace(/^\/|\/$/g, '');
+    private getActionMethodReflectedArgs(req: express.Request, metadata: RouteMetadata) {
+        let args = [];
+
+        for (let reflParam of metadata.getReflectionParams()) {
+            let paramTyping = reflParam.prototype.constructor.name;
+            if (paramTyping === 'Request') {
+                let request = new Request(req);
+                args.push(request);
+            }
+        }
+
+        return args;
     }
 
     private addDebuggedRoute(path: string, metadata: RouteMetadata) {

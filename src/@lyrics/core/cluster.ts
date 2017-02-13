@@ -2,10 +2,13 @@
  * Wrap cluster forking/restarting into a module
  */
 import * as os from 'os';
+import * as events from 'events';
 import * as cluster from 'cluster';
+import { Console, KernelEvents } from './';
 
 export class Cluster {
-
+    
+    private emitter: events.EventEmitter;
     private numCPUs: number;
 
     constructor() {
@@ -19,16 +22,17 @@ export class Cluster {
      */
     public start(onMasterProcessStart: Function) {
         if (cluster.isMaster) {
-            console.log('[Cluster] Master started');
 
             // fork a new cluster for each cpu
             for (var i = 0; i < this.numCPUs; i++) {
                 cluster.fork();
-                console.log('[Cluster] Child started');
+                KernelEvents.emit('cluster:fork', 'Cluster process started');
+                // Console.kernel('cluster.ts Child cluster started');
             }
 
             // restart a cluster for whenever a cluster dies
             cluster.on('exit', function(worker, code, signal) {
+                KernelEvents.emit('cluster:exit', 'Cluster process exited (reforked)');
                 cluster.fork();
             });
 

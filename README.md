@@ -1,2 +1,5 @@
 # npm-lyrics-ts
-Lyrics NodeJS application framework
+
+A NodeJS application framework writtent in typescript.
+
+## Features
