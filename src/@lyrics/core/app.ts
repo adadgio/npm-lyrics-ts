@@ -150,8 +150,8 @@ export class App {
      */
     public import(bundle: string): App
     {
-        let srvcsPath = `./../../app/${bundle}/service`;
-        let ctrlsPath = `./../../app/${bundle}/controller`;
+        let srvcsPath = `./../../app/bundles/${bundle}/service`;
+        let ctrlsPath = `./../../app/bundles/${bundle}/controller`;
 
         // load all controllers from AcmeBundle/controller/index.ts
         // there is nothing to do afterwards, typescript will read
