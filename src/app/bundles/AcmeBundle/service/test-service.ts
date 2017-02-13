@@ -1,5 +1,5 @@
-import { Service, ServiceInterface } from './../../../@lyrics/component';
-import { Inject } from './../../../@lyrics/routing';
+import { Service, ServiceInterface } from './../../../../@lyrics/component';
+import { Inject } from './../../../../@lyrics/routing';
 
 @Inject([
     { age:   '%my_stuff.age%' },

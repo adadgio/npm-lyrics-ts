@@ -1,7 +1,7 @@
-import { App, Console }                     from './../../../@lyrics/core';
-import { Route, Controller, Inject }        from './../../../@lyrics/routing';
-import { BaseController }                   from './../../../@lyrics/controller';
-import { Request, Response, JsonResponse }  from './../../../@lyrics/http';
+import { App, Console }                     from './../../../../@lyrics/core';
+import { Route, Controller, Inject }        from './../../../../@lyrics/routing';
+import { BaseController }                   from './../../../../@lyrics/controller';
+import { Request, Response, JsonResponse }  from './../../../../@lyrics/http';
 
 @Controller('/default')
 export class DefaultController extends BaseController
@@ -18,7 +18,7 @@ export class DefaultController extends BaseController
         let req = request.getRequest();
         let test = this.get('test.service');
         let body = req.body;
-        
+
         // example, access app container registered service
         // let test = this.app.get('test.service');
         // let name = this.app.config.get('my_stuff.name');

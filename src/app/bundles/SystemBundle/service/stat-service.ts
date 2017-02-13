@@ -29,7 +29,7 @@ export class StatService {
             for (let type in cpu.times) {
                 total += cpu.times[type];
             }
-            
+
             for (let type in cpu.times) {
                 usage[i][type] = Math.round(100 * cpu.times[type] / total);
                 // console.log("\t", type, Math.round(100 * cpu.times[type] / total));
