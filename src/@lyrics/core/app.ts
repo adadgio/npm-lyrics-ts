@@ -3,6 +3,7 @@
  * Handle env variables, express and loads routing
  */
 import * as fs       from 'fs';
+import * as http     from 'http';
 import * as yaml     from 'yamljs';
 import * as express  from 'express';
 import * as parser   from 'body-parser';
@@ -10,7 +11,7 @@ import * as systemjs from 'systemjs';
 
 import * as container from './../core/container';
 import { RouterBridge, RouterUtils } from './../routing';
-import { Console, Argument, Configuration } from './';
+import { Console, Argument, Configuration, KernelListener } from './';
 
 interface ExpressError {
     status?: number;
@@ -23,8 +24,10 @@ export class App {
 
     public config: Configuration;
     public router: express.Router;
+    public server: any; // http server returned by express.listen (or created yourself)
+    public xdebug: boolean;
 
-    private xdebug: boolean;
+    private webroot: string;
     private express: express.Application;
     private services: Object = {};
     private controllers: any;
@@ -34,7 +37,7 @@ export class App {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
-        Console.setEnv(this.env); // for clean debug logs
+        Console.setEnv(this.env); // for cleaner debug logs
 
         // then load the correct config environment file
         let confpath = __dirname + '/../../app/config/config.'+ this.env +'.yml';
@@ -51,18 +54,25 @@ export class App {
         this.config = new Configuration();
         this.config.inject(yamlConfig);
         container.setApp(this);
+        
+        // KernelListener.on('container:service:inited', (args) => {
+        //     console.log(args);
+        // });
     }
 
     public run(): void
     {
         // prepare express and middlewares
         this.express = express();
+        this.server = http.createServer(this.express);
         this.middleware();
 
         // declare and prepare router
         this.router = express.Router();
         this.routing();
-        this.killHooks();
+
+        // open ports and listen
+        this.server.listen(this.config.get('framework.express.port'));
     }
 
     private middleware(): void
@@ -70,6 +80,11 @@ export class App {
         // tell express to parse incoming body from json to object
         this.express.use(parser.json());
         this.express.use(parser.urlencoded({ extended: false }));
+
+        // serving static files
+        if (this.webroot) {
+            this.express.use('/public', express.static(this.webroot));
+        }
     }
 
     /**
@@ -82,10 +97,9 @@ export class App {
         // there is nothing to do... the annotations are
         // automatically read here by ts (??). Strange but it works
         // router bridge is the one responsible for creating the ctrl instances
-        for (let ctrl in this.controllers) {
-            this.log(`app.ts: Controller ${ctrl} read by ts compiler on boot`, 'whisper');
-            // let controller = new controllers[ctrl](this);
-        }
+        // for (let ctrl in this.controllers) {
+        //     // let controller = new controllers[ctrl](this);
+        // }
 
         RouterBridge.setRoutes();
         if (this.xdebug === true) {
@@ -113,8 +127,6 @@ export class App {
         //         next();
         //     }
         // });
-
-        this.express.listen(this.config.get('framework.express.port'));
     }
 
     /**
@@ -159,7 +171,7 @@ export class App {
 
         return this;
     }
-    
+
     /**
      * Set service name and prototype into the container
      */
@@ -179,6 +191,15 @@ export class App {
     }
 
     /**
+     * Set express publicly served files webroot.
+     */
+    public setWebroot(webroot: string): App
+    {
+        this.webroot = webroot;
+        return this;
+    }
+
+    /**
      * Toggle app wide debug mode or not.
      */
     public debug(value: boolean): App
@@ -186,47 +207,6 @@ export class App {
         this.xdebug = value;
 
         return this;
-    }
-
-    /**
-     * Logs messages to the console
-     * happens only if debug mode is on
-     */
-    public log(msg: string, mode: string): void
-    {
-        if (this.xdebug === false) { return; }
-
-        switch (mode) {
-            case 'whisper':
-                Console.whisper(msg);
-            break;
-            case 'log':
-                Console.log(msg);
-            break;
-            case 'info':
-                Console.info(msg);
-            break;
-            case 'warn':
-                Console.warn(msg);
-            break;
-            case 'kernel':
-                Console.kernel(msg);
-            break;
-            case 'error':
-                Console.error(msg);
-            break;
-            default:
-                Console.log(msg);
-            break;
-        }
-    }
-
-    /**
-     * Properly kill the node js
-     * process when errors occur.
-     */
-    private killHooks() {
-
     }
 
     public getInfo() {

@@ -1,6 +1,6 @@
 import { App, Console }                     from './../../../@lyrics/core';
-import { Route, Controller, Inject }        from './../../../@lyrics/routing';
 import { BaseController }                   from './../../../@lyrics/controller';
+import { Route, Controller, Inject }        from './../../../@lyrics/routing';
 import { Request, Response, JsonResponse }  from './../../../@lyrics/http';
 
 @Controller('/acme')
@@ -20,7 +20,7 @@ export class AcmeController extends BaseController
         // return a valid response object
         return new Response('Hello acme world');
     }
-    
+
     @Route('/demo', {
         type: 'POST',
         requirements: {

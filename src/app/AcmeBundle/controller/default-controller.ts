@@ -10,7 +10,7 @@ export class DefaultController extends BaseController
         super(app);
     }
 
-    @Route('/hello', {
+    @Route('/hi', {
         type: 'GET'
     })
     indexAction(request: Request)
@@ -18,9 +18,7 @@ export class DefaultController extends BaseController
         let req = request.getRequest();
         let test = this.get('test.service');
         let body = req.body;
-
-        console.log(test);
-
+        
         // example, access app container registered service
         // let test = this.app.get('test.service');
         // let name = this.app.config.get('my_stuff.name');
@@ -34,7 +32,7 @@ export class DefaultController extends BaseController
         return new Response(greeting);
     }
 
-    @Route('/helpost', {
+    @Route('/hello', {
         type: 'POST',
         requirements: {
             body: {

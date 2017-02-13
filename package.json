@@ -6,7 +6,6 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "npm run build:live",
-    "assets:install": "copyfiles src/config/* src/assets/**/* dist/",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev"
   },
   "keywords": [],
@@ -25,16 +24,16 @@
     "@types/moment": "^2.13.0",
     "@types/node": "^7.0.0",
     "@types/request": "0.0.39",
+    "@types/socket.io": "^1.4.27",
     "@types/twig": "0.0.28",
     "@types/yamljs": "^0.2.30",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "eyes": "^0.1.8",
     "moment": "^2.17.1",
-    "pdf-extract": "^1.0.9",
-    "pdf2json": "^1.1.7",
     "reflect-metadata": "^0.1.9",
     "request": "^2.79.0",
+    "socket.io": "^1.7.2",
     "twig": "^0.10.3",
     "yamljs": "^0.2.8"
   }

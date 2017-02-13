@@ -5,7 +5,7 @@
  * like @Route(...) and @Controller()
  * Inspired by https://github.com/pleerock/routing-controllers
  */
-import { Console } from './../core';
+import { Console, KernelEvents } from './../core';
 import { RouteMetadata, ControllerMetadata } from './../routing/metadata';
 
 /**
@@ -64,7 +64,7 @@ export function addServiceInjection(name: string, injectionKey: string, property
     _$_container.injections[name].push({ key: injectionKey, property: propertyName });
 }
 export function initService(name: string) {
-    _$_container.app.log(`container.ts: Service ${name} inited`, 'kernel');
+    KernelEvents.emit('container:service:inited', `container.ts: Service ${name} inited`);
 
     let serviceInstance = new _$_container.services[name].target();
     _$_container.services[name].instance = serviceInstance;
@@ -109,7 +109,7 @@ export function getServiceInstance(name: string) {
          initService(name);
      }
 
-     _$_container.app.log(`container.ts: Service ${name} requested`, 'whisper');
+     KernelEvents.emit('container:service:requested', `container.ts: Service ${name} requested`);
      return _$_container.services[name].instance;
 }
 

@@ -3,7 +3,7 @@
  */
 'use strict';
 let hrstart = process.hrtime();
-import { App, Cluster } from './@lyrics/core';
+import { App, Cluster, Console } from './@lyrics/core';
 
 /**
  * Let the app use clusters
@@ -15,11 +15,15 @@ clustering.start(f => {
 
     app
         .debug(true)
-        .import('AcmeBundle') // to import all AcmeBundle/controller|service/<controllers index.ts>
+        .import('SystemBundle')
+        .import('AcmeBundle')
+        .setWebroot(`${__dirname}/app/public`)
     ;
-
+    
     app.run();
 
+    // show total boot time for debug purposes
+    // can also use hrend[0] for value in seconds
     let hrend = process.hrtime(hrstart);
-    console.info("Boot time (hr): %ds %dms", hrend[0], hrend[1]/1000000);
+    Console.info(`Boot time (hr): ${(hrend[1]/1000000)}ms`);
 });

@@ -6,7 +6,7 @@
 import * as fs from 'fs';
 import * as moment from 'moment';
 
-export class ConsoleSingleton
+class ConsoleSingleton
 {
     Reset       = '\x1b[0m';
     Bright      = '\x1b[1m';
@@ -45,7 +45,7 @@ export class ConsoleSingleton
         let date = moment().format('Y-MM-DD');
         let datetime = moment().format('Y-MM-DD HM-mm-s');
         let filepath = __dirname + `/../../app/log/${this.env}-${date}-debug.log`;
-        
+
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
     }
 
