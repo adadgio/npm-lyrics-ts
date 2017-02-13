@@ -3,7 +3,7 @@
  */
 'use strict';
 let hrstart = process.hrtime();
-import { App, Cluster, Console } from './@lyrics/core';
+import { App, Cluster, Console } from './lyrics/core';
 
 /**
  * Let the app use clusters
@@ -19,7 +19,7 @@ clustering.start(f => {
         .import('AcmeBundle')
         .setWebroot(`${__dirname}/app/public`)
     ;
-    
+
     app.run();
 
     // show total boot time for debug purposes

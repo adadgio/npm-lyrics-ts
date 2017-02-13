@@ -1,4 +1,4 @@
-// import { Service, ServiceInterface } from './../../@lyrics/component';
+// import { Service, ServiceInterface } from './../../lyrics/component';
 
 export class OtherService
 {

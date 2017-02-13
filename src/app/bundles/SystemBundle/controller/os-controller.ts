@@ -1,10 +1,10 @@
 import * as os  from 'os';
 import * as io from 'socket.io';
 
-import { App, Console }                     from './../../../../@lyrics/core';
-import { BaseController }                   from './../../../../@lyrics/controller';
-import { Route, Controller, Inject }        from './../../../../@lyrics/routing';
-import { Request, Response, JsonResponse }  from './../../../../@lyrics/http';
+import { App, Console }                     from './../../../../lyrics/core';
+import { BaseController }                   from './../../../../lyrics/controller';
+import { Route, Controller, Inject }        from './../../../../lyrics/routing';
+import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
 
 @Controller('/_system')
 export class OsController extends BaseController
