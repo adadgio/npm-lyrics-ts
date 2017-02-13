@@ -1,5 +1,21 @@
 # npm-lyrics-ts
 
-A NodeJS application framework writtent in typescript.
+A NodeJS application framework written in typescript.
 
-## Features
+## Install
+
+Get master branch from repository.
+
+`wget https://github.com/adadgio/npm-lyrics-ts/archive/master.zip && unzip master.zip && rm master.zip`
+
+Rename the project to your own project name (`acme`)
+
+`mv npm-lyrics-ts-master acme`
+
+## Get started
+
+```bash
+cd acme
+npm install
+npm start
+```
