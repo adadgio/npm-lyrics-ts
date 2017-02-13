@@ -7,7 +7,6 @@ import * as http     from 'http';
 import * as yaml     from 'yamljs';
 import * as express  from 'express';
 import * as parser   from 'body-parser';
-import * as systemjs from 'systemjs';
 
 import * as container from './../core/container';
 import { RouterBridge, RouterUtils } from './../routing';
@@ -54,7 +53,7 @@ export class App {
         this.config = new Configuration();
         this.config.inject(yamlConfig);
         container.setApp(this);
-        
+
         // KernelListener.on('container:service:inited', (args) => {
         //     console.log(args);
         // });

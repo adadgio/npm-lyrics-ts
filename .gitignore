@@ -1,4 +1,4 @@
-dist
-typings
-node_modules
 *.log
+/dist
+/typings
+/node_modules
