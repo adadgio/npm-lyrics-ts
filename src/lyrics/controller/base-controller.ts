@@ -1,6 +1,9 @@
 import * as fs from 'fs';
-import * as twig from 'twig';
-import { App } from './../core/app';
+import * as Handlebars from 'handlebars';
+
+import { App }              from './../core/app';
+import { Console }          from './../core/';
+import { Response, Code }   from './../http';
 
 export class BaseController
 {
@@ -18,10 +21,31 @@ export class BaseController
         return this.constructor.name;
     }
 
-    protected render(template: string, data?: Object) {
-        let templateLocation = `${this.app.getRootDir()}/app/views/test.twig`;
-        // twig.renderFile(templateLocation, { foo: 'bar' }, (err, html) => {
-        //
-        // });
+    protected renderView(location: string, data?: Object) {
+        let path = `${this.app.getRootDir()}/app/viewss/${location.replace(':', '/')}`;
+
+        // check that template file exists
+        if (!fs.existsSync(path)) {
+            Console.exception(`Template path ${path} does not exist, file not found`);
+        }
+
+        // compile template
+        let contents = fs.readFileSync(path, 'utf8');
+        let template: Function = Handlebars.compile(contents);
+        let renderedView = template(data);
+
+        return renderedView;
+    }
+
+    protected render(location: string, data?: Object) {
+        let renderedView = this.renderView(location, data);
+        return new Response(renderedView);
+    }
+
+    protected renderHtml(contents: string, data?: Object) {
+        let template: Function = Handlebars.compile(contents);
+        let renderedView = template(data);
+
+        return renderedView;
     }
 }

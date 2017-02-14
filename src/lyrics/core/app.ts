@@ -36,7 +36,7 @@ export class App {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
-        Console.setEnv(this.env); // for cleaner debug logs
+        Console.setEnv(this.env, true); // for cleaner debug logs
 
         // then load the correct config environment file
         let confpath = __dirname + '/../../app/config/config.'+ this.env +'.yml';
@@ -63,7 +63,7 @@ export class App {
         this.express = express();
         this.server = http.createServer(this.express);
         this.middleware();
-        
+
         // declare and prepare router
         this.router = express.Router();
         this.routing();

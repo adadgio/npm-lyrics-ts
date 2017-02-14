@@ -1,7 +1,7 @@
 import { App, Console }                     from './../../../../lyrics/core';
 import { Route, Controller, Inject }        from './../../../../lyrics/routing';
-import { BaseController }                   from './../../../../lyrics/controller';
 import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
+import { BaseController }                   from './../../../../lyrics/controller';
 
 @Controller('/default')
 export class DefaultController extends BaseController
@@ -26,12 +26,10 @@ export class DefaultController extends BaseController
         // do some heavy lifting and send back response
         let greeting = this.getTitle() + ' ' + test.greet('Romain');
 
-        this.render('', {a: 3});
-
-        // return a valid response object
-        return new Response(greeting);
+        // return new Response(greeting);
+        return this.render('Acme:test.twig', { greeting: greeting });
     }
-
+    
     @Route('/hello', {
         type: 'POST',
         requirements: {

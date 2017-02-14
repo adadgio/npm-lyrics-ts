@@ -55,8 +55,18 @@ class ConsoleSingleton
         // fs.unlinkSync(oldFile);
     }
 
-    setEnv(env: string) {
+    setEnv(env: string, traceDisabled: boolean = false) {
         this.env = env;
+
+        process.on('Error', function (error) {
+        //    console.log(error.stack);
+        });
+
+        // if (this.env === 'prod' || this.env === 'production' || traceDisabled === true) {
+        //     process.env.NODE_ENV === 'production';
+        // }
+
+        return this;
     }
 
     log(text: string): void {
@@ -103,7 +113,7 @@ class ConsoleSingleton
         this.writeLog(text);
         console.log('\x1b[90m%s\x1b[0m', text);
     }
-
+    
     exception(text: string): void {
         this.writeLog(text);
         console.log('\x1b[41m%s\x1b[0m', text);
