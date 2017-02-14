@@ -21,7 +21,7 @@ npm start
 ```
 
 You can test the **Acme demo bundle** endpoints included in the framework by downloading
-the (postman test file)[./docs/lyrics.postman.json].
+the [postman demo collection](./docs/lyrics.postman.json) file.
 
 ## Documentation
 
