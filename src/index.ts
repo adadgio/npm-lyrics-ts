@@ -1,7 +1,7 @@
 /**
  * Index
  */
-'use strict';
+// 'use strict';
 let hrstart = process.hrtime();
 import { App, Cluster, Console } from './lyrics/core';
 

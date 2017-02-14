@@ -3,6 +3,8 @@ import { Route, Controller, Inject }        from './../../../../lyrics/routing';
 import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
 import { BaseController }                   from './../../../../lyrics/controller';
 
+// import * as StringUtils from 'zutils';
+
 @Controller('/default')
 export class DefaultController extends BaseController
 {
@@ -18,7 +20,7 @@ export class DefaultController extends BaseController
         // let req = request.getRequest();
         // let test = this.get('test.service');
         // let body = req.body;
-
+        
         // // example, access app container registered service
         // // let test = this.app.get('test.service');
         // // let name = this.app.config.get('my_stuff.name');
@@ -30,7 +32,7 @@ export class DefaultController extends BaseController
         // return this.render('Acme:test.twig', { greeting: greeting });
 
         let name = 'Obama';
-        
+
         // render raw html or from a local template location
         // return this.render('Acme:test.twig', { name: name });
         return this.renderHtml('<p>Hello {{name}}</p>');
