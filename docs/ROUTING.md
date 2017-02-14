@@ -12,7 +12,7 @@ the base controller but it provide ready-made methods to render views and html.
 
 The controller method must return a response object.
 
-```nodejs
+```node
 // app/AcmeBundle/controller/default-controller.ts
 import { App }                from './../../../../lyrics/core';
 import { Route, Controller }  from './../../../../lyrics/routing';
