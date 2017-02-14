@@ -6,9 +6,9 @@ import 'reflect-metadata';
 import * as express     from 'express';
 import * as container   from './../core/container';
 import { RouterUtils }  from './';
-import { Console, KernelEvents }            from './../core';
-import { RouteMetadata, ActionTypes }       from './metadata';
-import { Request, Response, JsonResponse }  from './../http';
+import { Console, KernelEvents, KernelListener, XEvent } from './../core';
+import { RouteMetadata, ActionTypes }            from './metadata';
+import { Request, Response, JsonResponse }       from './../http';
 
 class RouterBridgeSingleton {
     private debuggedRoutes: Array<string>;
@@ -31,10 +31,13 @@ class RouterBridgeSingleton {
     }
 
     debug() {
-        let app: any = container.getApp();
-        for (let routeDebugPath of this.debuggedRoutes) {
-            // app .log(`router-bridge.ts ${routeDebugPath}`, 'info');
-        }
+        // @log Listen to route requests & responses
+        KernelListener.on(XEvent.ROUTER_REQUEST, (args) => {
+            Console.cyan(args);
+        });
+        KernelListener.on(XEvent.ROUTER_RESPONSE, (args) => {
+            Console.magenta(args);
+        });
     }
 
     private expressRouterAddRoute(basePath:string, metadata: RouteMetadata) {
@@ -49,7 +52,7 @@ class RouterBridgeSingleton {
             case ActionTypes.GET:
                 app.router.get(path, (req, res, next) => {
 
-                    KernelEvents.emit('router:request', `router-bridge.ts REQ ${path} -x ${ActionTypes.GET}`);
+                    KernelEvents.emit(XEvent.ROUTER_REQUEST, `router-bridge.ts REQ ${path} -x ${ActionTypes.GET}`);
 
                     let info: any;
 
@@ -60,13 +63,13 @@ class RouterBridgeSingleton {
                         info = this.sendResponse(result, res);
                     });
 
-                    KernelEvents.emit('router:response', `router-bridge.ts RSP ${path} -x ${ActionTypes.GET} ${info.restype} (in ${duration})`);
+                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.GET} ${info.restype} (in ${duration})`);
                 });
 
             break;
             case ActionTypes.POST:
                 app.router.post(path, (req, res, next) => {
-                    KernelEvents.emit('router:request', `router-bridge.ts REQ ${path} -x ${ActionTypes.POST}`);
+                    KernelEvents.emit(XEvent.ROUTER_REQUEST, `router-bridge.ts REQ ${path} -x ${ActionTypes.POST}`);
 
                     let info: any;
                     let reqErrors = RouterUtils.checkRequirements(req, metadata);
@@ -74,7 +77,7 @@ class RouterBridgeSingleton {
                     let duration = RouterUtils.execTime(() => {
                         let args = this.getActionMethodReflectedArgs(req, metadata);
                         let result = methodAction.apply(ctrlInstance, args);
-                        
+
                         if (reqErrors.length === 0) {
                             info = this.sendResponse(result, res);
                         } else {
@@ -82,7 +85,7 @@ class RouterBridgeSingleton {
                         }
                     });
 
-                    KernelEvents.emit('router:request', `router-bridge.ts RSP ${path} -x ${ActionTypes.POST} ${info.restype} (in ${duration})`);
+                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.POST} ${info.restype} (in ${duration})`);
                 });
             break;
             default:

@@ -4,16 +4,24 @@
 import * as os from 'os';
 import * as events from 'events';
 import * as cluster from 'cluster';
-import { Console, KernelEvents } from './';
+import { Console, KernelEvents, KernelListener, XEvent } from './';
 
 export class Cluster {
-    
+
     private emitter: events.EventEmitter;
     private numCPUs: number;
 
     constructor() {
         this.numCPUs = 1; // @todo Remove, only for debug
         // this.numCPUs = os.cpus().length - 2;
+
+        KernelListener.on(XEvent.CLUSTER_FORK, (args) => {
+            Console.red(args);
+        });
+        
+        KernelListener.on(XEvent.CLUSTER_EXIT, (args) => {
+            Console.red(args);
+        });
     }
 
     /**
@@ -23,16 +31,15 @@ export class Cluster {
     public start(onMasterProcessStart: Function) {
         if (cluster.isMaster) {
 
-            // fork a new cluster for each cpu
+            // fork a new cluster for each CPU
             for (var i = 0; i < this.numCPUs; i++) {
                 cluster.fork();
-                KernelEvents.emit('cluster:fork', 'Cluster process started');
-                // Console.kernel('cluster.ts Child cluster started');
+                KernelEvents.emit(XEvent.CLUSTER_FORK, 'Cluster process started');
             }
 
             // restart a cluster for whenever a cluster dies
             cluster.on('exit', function(worker, code, signal) {
-                KernelEvents.emit('cluster:exit', 'Cluster process exited (reforked)');
+                KernelEvents.emit(XEvent.CLUSTER_EXIT, 'Cluster process exited (reforked)');
                 cluster.fork();
             });
 

@@ -53,19 +53,17 @@ export class App {
         this.config = new Configuration();
         this.config.inject(yamlConfig);
         container.setApp(this);
-
-        // KernelListener.on('container:service:inited', (args) => {
-        //     console.log(args);
-        // });
     }
 
     public run(): void
     {
+        this.onDebugAll();
+
         // prepare express and middlewares
         this.express = express();
         this.server = http.createServer(this.express);
         this.middleware();
-
+        
         // declare and prepare router
         this.router = express.Router();
         this.routing();
@@ -101,9 +99,6 @@ export class App {
         // }
 
         RouterBridge.setRoutes();
-        if (this.xdebug === true) {
-            RouterBridge.debug();
-        }
 
         // tell the express app to all all the
         // defined routes from this base point
@@ -206,6 +201,13 @@ export class App {
         this.xdebug = value;
 
         return this;
+    }
+
+    private onDebugAll() {
+        if (this.xdebug === true) {
+            container.debug();
+            RouterBridge.debug();
+        }
     }
 
     public getInfo() {

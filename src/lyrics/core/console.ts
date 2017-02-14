@@ -43,10 +43,16 @@ class ConsoleSingleton
 
     writeLog(text: string) {
         let date = moment().format('Y-MM-DD');
-        let datetime = moment().format('Y-MM-DD HM-mm-s');
+
+        let datetime = moment().format('Y-MM-DD HH-mm-s');
         let filepath = __dirname + `/../../app/log/${this.env}-${date}-debug.log`;
 
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
+
+        // @todo delete logs older tha 3 days
+        // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
+        // let oldFile = '?';
+        // fs.unlinkSync(oldFile);
     }
 
     setEnv(env: string) {
@@ -58,9 +64,14 @@ class ConsoleSingleton
         console.log('\x1b[37m%s\x1b[0m', text);
     }
 
-    kernel(text: string): void {
+    white(text: string): void {
         this.writeLog(text);
         console.log('\x1b[107;35m%s\x1b[0m', text);
+    }
+
+    red(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[31m%s\x1b[0m', text);
     }
 
     warn(text: string): void {
@@ -73,14 +84,24 @@ class ConsoleSingleton
         console.log('\x1b[31m%s\x1b[0m', text);
     }
 
-    info(text: string): void {
+    magenta(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[35m%s\x1b[0m', text);
+    }
+
+    cyan(text: string): void {
         this.writeLog(text);
         console.log('\x1b[36m%s\x1b[0m', text);
     }
 
-    whisper(text: string): void {
+    gray(text: string): void {
         this.writeLog(text);
         console.log('\x1b[97m%s\x1b[0m', text);
+    }
+
+    lite(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[90m%s\x1b[0m', text);
     }
 
     exception(text: string): void {

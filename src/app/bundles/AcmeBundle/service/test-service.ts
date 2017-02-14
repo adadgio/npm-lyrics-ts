@@ -1,3 +1,6 @@
+/**
+ * A simple yet demonstrative service.
+ */
 import { Service, ServiceInterface } from './../../../../lyrics/component';
 import { Inject } from './../../../../lyrics/routing';
 
