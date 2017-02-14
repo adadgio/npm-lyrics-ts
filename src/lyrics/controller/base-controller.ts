@@ -22,7 +22,7 @@ export class BaseController
     }
 
     protected renderView(location: string, data?: Object) {
-        let path = `${this.app.getRootDir()}/app/viewss/${location.replace(':', '/')}`;
+        let path = `${this.app.getRootDir()}/app/views/${location.replace(':', '/')}`;
 
         // check that template file exists
         if (!fs.existsSync(path)) {

@@ -29,14 +29,14 @@ export class DefaultController extends BaseController
     constructor(app: App) {
         super(app);
     }
-
-    @Route('/home', {
+    
+    @Route('/getexample', {
         type: 'GET'
     })
     indexAction(request: Request)
     {
         let name = 'Obama';
-        
+
         // render raw html or from a local template location
         // return this.render('Acme:test.twig', { name: name });
         return this.renderHtml('<p>Hello {{name}}</p>');
@@ -50,10 +50,10 @@ Here is a more complex example to define route requirements and fetching data fr
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
-import { App }                from './../../../../lyrics/core';
-import { Route, Controller }  from './../../../../lyrics/routing';
-import { Request, JsonResponse }  from './../../../../lyrics/http';
-import { BaseController }     from './../../../../lyrics/controller';
+import { App }                      from './../../../../lyrics/core';
+import { Route, Controller }        from './../../../../lyrics/routing';
+import { Request, JsonResponse }    from './../../../../lyrics/http';
+import { BaseController }           from './../../../../lyrics/controller';
 
 // define a base route for all
 // future controller methods
@@ -66,7 +66,7 @@ export class DefaultController extends BaseController
         super(app);
     }
 
-    @Route('/register', {
+    @Route('/postexample', {
         type: 'POST',
         requirements: {
             body: {
