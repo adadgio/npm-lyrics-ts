@@ -1,5 +1,6 @@
-// import { Service, ServiceInterface } from './../../lyrics/component';
-
+/**
+ * An other simple service.
+ */
 export class OtherService
 {
     public sayBye() {

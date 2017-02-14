@@ -1,7 +1,7 @@
 /**
  * Index
  */
-'use strict';
+// 'use strict';
 let hrstart = process.hrtime();
 import { App, Cluster, Console } from './lyrics/core';
 
@@ -25,5 +25,5 @@ clustering.start(f => {
     // show total boot time for debug purposes
     // can also use hrend[0] for value in seconds
     let hrend = process.hrtime(hrstart);
-    Console.info(`Boot time (hr): ${(hrend[1]/1000000)}ms`);
+    Console.red(`Boot time (hr): ${(hrend[1]/1000000)}ms`);
 });

@@ -7,7 +7,7 @@ class KernelListenerSingleton {
     
     on(event: string, then: Function) {
         KernelEvents.on(event, (args) => {
-            then(args)
+            then(args);
         });
     }
 }

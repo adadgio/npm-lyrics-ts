@@ -1,9 +1,7 @@
 {
   "dependencies": {
     "body-parser": "registry:dt/body-parser#0.0.0+20160726204056",
-    "casperjs": "registry:dt/casperjs#1.0.29+20161214185158",
-    "express": "registry:dt/express#4.0.0+20161115070701",
-    "firebase": "registry:npm/firebase#3.0.5+20160723033700"
+    "express": "registry:dt/express#4.0.0+20161115070701"
   },
   "globalDependencies": {
     "node": "registry:env/node#6.0.0+20170102175725"

@@ -36,7 +36,7 @@ export class App {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
-        Console.setEnv(this.env); // for cleaner debug logs
+        Console.setEnv(this.env, true); // for cleaner debug logs
 
         // then load the correct config environment file
         let confpath = __dirname + '/../../app/config/config.'+ this.env +'.yml';
@@ -53,14 +53,12 @@ export class App {
         this.config = new Configuration();
         this.config.inject(yamlConfig);
         container.setApp(this);
-
-        // KernelListener.on('container:service:inited', (args) => {
-        //     console.log(args);
-        // });
     }
 
     public run(): void
     {
+        this.onDebugAll();
+
         // prepare express and middlewares
         this.express = express();
         this.server = http.createServer(this.express);
@@ -101,9 +99,6 @@ export class App {
         // }
 
         RouterBridge.setRoutes();
-        if (this.xdebug === true) {
-            RouterBridge.debug();
-        }
 
         // tell the express app to all all the
         // defined routes from this base point
@@ -206,6 +201,13 @@ export class App {
         this.xdebug = value;
 
         return this;
+    }
+
+    private onDebugAll() {
+        if (this.xdebug === true) {
+            container.debug();
+            RouterBridge.debug();
+        }
     }
 
     public getInfo() {

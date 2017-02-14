@@ -20,9 +20,8 @@ export class OsController extends BaseController
         let stat = this.get('stat.service');
         this.socket = io(this.app.server);
 
-
         this.socket.on('connection', (client) => {
-            // eventualy do something when client disconnects...
+            // eventually do something when client disconnects...
             this.socket.on('disconnect', () => {
 
             });
@@ -44,6 +43,6 @@ export class OsController extends BaseController
     })
     indexAction(request: Request)
     {
-        return new Response('Hey');
+        return this.render('System:default.twig', { });
     }
 }

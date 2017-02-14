@@ -5,7 +5,7 @@
  * like @Route(...) and @Controller()
  * Inspired by https://github.com/pleerock/routing-controllers
  */
-import { Console, KernelEvents } from './../core';
+import { Console, KernelEvents, KernelListener, XEvent } from './../core';
 import { RouteMetadata, ControllerMetadata } from './../routing/metadata';
 
 /**
@@ -20,6 +20,16 @@ const _$_container = {
     controllers: {},
     injections: {},
 };
+
+export function debug() {
+    // @log Service calls and ignition
+    KernelListener.on(XEvent.CONTAINER_SERVICE_INITED, (args) => {
+        Console.lite(args);
+    });
+    KernelListener.on(XEvent.CONTAINER_SERVICE_REQUESTED, (args) => {
+        Console.lite(args);
+    });
+}
 
 export function getMethodsAnnotations() {
     return _$_container.methods;
