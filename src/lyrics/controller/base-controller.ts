@@ -46,6 +46,6 @@ export class BaseController
         let template: Function = Handlebars.compile(contents);
         let renderedView = template(data);
 
-        return renderedView;
+        return new Response(renderedView);
     }
 }

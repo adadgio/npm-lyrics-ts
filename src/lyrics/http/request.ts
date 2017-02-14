@@ -14,6 +14,10 @@ export class Request {
     getBody() {
         return this.req.body;
     }
+
+    getParam(param: string) {
+        return (typeof this.req.body[param] === 'undefined') ? null : this.req.body[param];
+    }
     
     getHeaders() {
         return this.req.headers;
