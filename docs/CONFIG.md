@@ -17,7 +17,7 @@ my_stuff:
 
 ## Accessing config in controllers
 
-```nodejs
+```node
 // app/AcmeBundle/controller/default-controller.ts
 indexAction()
 {
@@ -28,9 +28,11 @@ indexAction()
 
 ```
 
-## Accessing config in services
+## Injecting config in services
 
-```nodejs
+Basic dependency injection (DI) is provider by the `@Inject` annotation.
+
+```node
 // app/AcmeBundle/service/test-service.ts
 import { Service } from './../../../../lyrics/component';
 import { Inject } from './../../../../lyrics/routing';
@@ -56,5 +58,6 @@ export class TestService extends Service
 }
 ```
 
-[&laquo; Home](./../README.md) ---
+[&laquo; Home](./../README.md)
+
 [Controllers &raquo;](./CONTROLLERS.md)
