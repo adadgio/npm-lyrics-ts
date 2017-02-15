@@ -10,7 +10,7 @@ See also: [routing components](./ROUTING.md)
 Render views
 ------
 
-<center>
-[&laquo; Home](./../README.md)
+<p align="center">
+[&laquo; Home](./../README.md) &nbsp;|&nbsp;
 [Routing &raquo;](./ROUTING.md)
-</center>
+</p>
