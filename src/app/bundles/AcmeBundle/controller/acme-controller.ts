@@ -16,13 +16,13 @@ export class AcmeController extends BaseController
         // access a service instance
         let test = this.get('test.service');
 
-        // access config or config value
+        // access full config or config value
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
 
         return new Response('Acme demo');
     }
-    
+
     @Route('/other', { type: 'GET' })
     otherAction()
     {

@@ -25,8 +25,10 @@ the [postman demo collection](./docs/lyrics.postman.json) file.
 
 ## Documentation
 
-- [Routing and controllers](./docs/ROUTING.md)
-- [Services and dependency injection](./docs/SERVICES.md)
+- [Config](./docs/CONFIG.md)
+- [Controllers](./docs/CONTROLLERS.md)
+- [Routing](./docs/ROUTING.md)
+- [Services and DI](./docs/SERVICES.md)
 
 
 ## Miscellaneous
