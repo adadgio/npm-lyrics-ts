@@ -1,16 +1,10 @@
 Routing
+======
+
+Defining routes
 ------
 
-## General principles
-
-Routing is defined by controller annotations above methods.
-
-## Define simple routes
-
-You must create a controller to define a route. Your base controller doesn't have to extend
-the base controller but it provide ready-made methods to render views and html.
-
-The controller method must return a response object.
+Routes are defined on controller class and methods with **annotations**. Methods must return a response object.
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
@@ -42,7 +36,8 @@ export class DefaultController extends BaseController
 }
 ```
 
-## Request and responses
+Requirements and request params
+------
 
 Here is a more complex example to define route requirements and fetching data from request.
 
@@ -90,3 +85,8 @@ export class DefaultController extends BaseController
     }
 }
 ```
+
+
+|                                         |                                      |
+| --------------------------------------- |:------------------------------------:|
+| Previous &raquo; [Home](./../CONTROLLERS.md) | Next &raquo; [Routing](./SERVICES.md) |
