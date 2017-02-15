@@ -11,5 +11,6 @@ Render views
 ------
 
 
-| --------------------------------------- |:------------------------------------:|
-| Previous &raquo; [Home](./../README.md) | Next &raquo; [Routing](./ROUTING.md) |
+[&laquo; Home](./../README.md)
+
+[Routing &raquo;](./ROUTING.md)
