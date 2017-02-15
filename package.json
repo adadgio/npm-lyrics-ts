@@ -1,21 +1,23 @@
 {
   "name": "lyrics",
   "version": "1.0.0",
-  "description": "A typescript test package",
+  "description": "A typescript framework",
   "repository": "https://github.com/adadgio/nodejs-typescript-starter",
   "main": "dist/index.js",
   "scripts": {
     "start": "npm run build:live",
-    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev"
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev",
+    "build": "tsc && npm run build:task",
+    "build:task": "bash build.sh"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["node", "typescript", "framework"],
+  "author": "Romain Bruckert",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^7.0.0",
-    "copyfiles": "^1.0.0",
     "nodemon": "^1.11.0",
     "ts-node": "^2.1.0",
+    "copyfiles": "^1.0.0",
     "typescript": "^2.1.6",
     "typescript-watcher": "^0.0.4"
   },

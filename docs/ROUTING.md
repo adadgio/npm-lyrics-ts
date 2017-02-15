@@ -29,16 +29,14 @@ export class DefaultController extends BaseController
     constructor(app: App) {
         super(app);
     }
-    
-    @Route('/getexample', {
+
+    @Route('/get-demo', {
         type: 'GET'
     })
-    indexAction(request: Request)
+    indexAction()
     {
         let name = 'Obama';
 
-        // render raw html or from a local template location
-        // return this.render('Acme:test.twig', { name: name });
         return this.renderHtml('<p>Hello {{name}}</p>');
     }
 }
@@ -66,7 +64,7 @@ export class DefaultController extends BaseController
         super(app);
     }
 
-    @Route('/postexample', {
+    @Route('/post-demo', {
         type: 'POST',
         requirements: {
             body: {
@@ -74,17 +72,13 @@ export class DefaultController extends BaseController
                 surname: 'string',
                 name: ['string', 'null'],
             },
-            headers: {
-                Token: 'string',
-            }
+            headers: { Token: 'string' }
         }
     })
-    postExampleAction(request: Request)
+    postAction(request: Request)
     {
-        // let req = request.getRequest();
         // console.log(req.body, req.headers);
-
-        // .. some other logic to persist user object
+        // ...some other logic to persist user object
         let person: Object = {
             id: request.getParam('id'),
             name: request.getParam('name'),
@@ -92,7 +86,7 @@ export class DefaultController extends BaseController
         };
 
         // return a valid response object
-        return new JsonResponse({ message: 'user successfuly created' });
+        return new JsonResponse({ message: 'user successfuly created', person: person });;
     }
 }
 ```
