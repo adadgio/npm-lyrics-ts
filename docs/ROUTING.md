@@ -87,6 +87,4 @@ export class DefaultController extends BaseController
 ```
 
 
-|                                         |                                      |
-| --------------------------------------- |:------------------------------------:|
 | Previous &raquo; [Home](./../CONTROLLERS.md) | Next &raquo; [Routing](./SERVICES.md) |
