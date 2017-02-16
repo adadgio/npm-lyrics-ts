@@ -48,13 +48,13 @@ export class App {
 
         // save configuration parameters into app
         // and basic default app configuration vars
-        this.root = __dirname+'/../..';
+        this.root = process.env.PWD + '/src';
         this.xdebug = false;
         this.config = new Configuration();
         this.config.inject(yamlConfig);
         container.setApp(this);
     }
-
+    
     public run(): void
     {
         this.onDebugAll();

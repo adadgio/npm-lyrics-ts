@@ -1,16 +1,10 @@
 Routing
+======
+
+Defining routes
 ------
 
-## General principles
-
-Routing is defined by controller annotations above methods.
-
-## Define simple routes
-
-You must create a controller to define a route. Your base controller doesn't have to extend
-the base controller but it provide ready-made methods to render views and html.
-
-The controller method must return a response object.
+Routes are defined on controller class and methods with **annotations**. Methods must return a response object.
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
@@ -29,22 +23,21 @@ export class DefaultController extends BaseController
     constructor(app: App) {
         super(app);
     }
-    
-    @Route('/getexample', {
+
+    @Route('/get-demo', {
         type: 'GET'
     })
-    indexAction(request: Request)
+    indexAction()
     {
         let name = 'Obama';
 
-        // render raw html or from a local template location
-        // return this.render('Acme:test.twig', { name: name });
         return this.renderHtml('<p>Hello {{name}}</p>');
     }
 }
 ```
 
-## Request and responses
+Requirements and request params
+------
 
 Here is a more complex example to define route requirements and fetching data from request.
 
@@ -66,7 +59,7 @@ export class DefaultController extends BaseController
         super(app);
     }
 
-    @Route('/postexample', {
+    @Route('/post-demo', {
         type: 'POST',
         requirements: {
             body: {
@@ -74,17 +67,13 @@ export class DefaultController extends BaseController
                 surname: 'string',
                 name: ['string', 'null'],
             },
-            headers: {
-                Token: 'string',
-            }
+            headers: { Token: 'string' }
         }
     })
-    postExampleAction(request: Request)
+    postAction(request: Request)
     {
-        // let req = request.getRequest();
         // console.log(req.body, req.headers);
-
-        // .. some other logic to persist user object
+        // ...some other logic to persist user object
         let person: Object = {
             id: request.getParam('id'),
             name: request.getParam('name'),
@@ -92,7 +81,11 @@ export class DefaultController extends BaseController
         };
 
         // return a valid response object
-        return new JsonResponse({ message: 'user successfuly created' });
+        return new JsonResponse({ message: 'user successfuly created', person: person });;
     }
 }
 ```
+
+[&laquo; Controllers](./../CONTROLLERS.md)
+
+[Services &raquo;](./SERVICES.md)

@@ -4,6 +4,7 @@
  * Pattern: singleton
  */
 import * as fs from 'fs';
+import * as path from 'path';
 import * as moment from 'moment';
 
 class ConsoleSingleton
@@ -43,12 +44,11 @@ class ConsoleSingleton
 
     writeLog(text: string) {
         let date = moment().format('Y-MM-DD');
-
         let datetime = moment().format('Y-MM-DD HH-mm-s');
-        let filepath = __dirname + `/../../app/log/${this.env}-${date}-debug.log`;
+        let filepath = process.env.PWD + `/var/logs/${this.env}-${date}-debug.log`;
 
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
-
+        
         // @todo delete logs older tha 3 days
         // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
         // let oldFile = '?';
@@ -113,7 +113,7 @@ class ConsoleSingleton
         this.writeLog(text);
         console.log('\x1b[90m%s\x1b[0m', text);
     }
-    
+
     exception(text: string): void {
         this.writeLog(text);
         console.log('\x1b[41m%s\x1b[0m', text);

@@ -20,7 +20,7 @@ export class BaseController
     private getChildClassName() {
         return this.constructor.name;
     }
-
+    
     protected renderView(location: string, data?: Object) {
         let path = `${this.app.getRootDir()}/app/views/${location.replace(':', '/')}`;
 

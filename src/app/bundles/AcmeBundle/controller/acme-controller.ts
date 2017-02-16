@@ -10,35 +10,22 @@ export class AcmeController extends BaseController
         super(app);
     }
 
-    @Route('/index', {
-        type: 'GET'
-    })
+    @Route('/index', { type: 'GET' })
     indexAction(request: Request)
     {
+        // access a service instance
         let test = this.get('test.service');
 
-        // return a valid response object
-        return new Response('Hello acme world');
+        // access full config or config value
+        let conf = this.app.config.all();
+        let item = this.app.config.get('my_stuff.age');
+
+        return new Response('Acme demo');
     }
 
-    @Route('/demo', {
-        type: 'POST',
-        requirements: {
-            body: {
-                id: 'number',
-                surname: 'string',
-                name: ['string', 'null'],
-            },
-            headers: {
-                Token: 'string',
-            }
-        }
-    })
-    acmeAction(request: Request)
+    @Route('/other', { type: 'GET' })
+    otherAction()
     {
-        let req = request.getRequest();
-
-        // return a valid response object
-        return new JsonResponse({ message: 'Hello acme world' });
+        return new JsonResponse({ message: 'Acme Json' });
     }
 }
