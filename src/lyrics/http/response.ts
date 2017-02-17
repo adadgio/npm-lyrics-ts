@@ -1,4 +1,4 @@
-import { Code } from './code';
+import { Code } from '@lyrics/http';
 
 export class Response {
     private statusCode: number;
@@ -8,7 +8,7 @@ export class Response {
         this.statusCode = statusCode;
         this.content = content;
     }
-    
+
     getContent() {
         return this.content.toString();
     }

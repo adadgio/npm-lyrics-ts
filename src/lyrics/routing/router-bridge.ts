@@ -4,11 +4,11 @@
  */
 import 'reflect-metadata';
 import * as express     from 'express';
-import * as container   from './../core/container';
-import { RouterUtils }  from './';
-import { Console, KernelEvents, KernelListener, XEvent } from './../core';
-import { RouteMetadata, ActionTypes }            from './metadata';
-import { Request, Response, JsonResponse }       from './../http';
+import * as container   from '@lyrics/core/container';
+import { RouterUtils }  from '@lyrics/routing';
+import { Console, KernelEvents, KernelListener, XEvent } from '@lyrics/core';
+import { RouteMetadata, ActionTypes }                    from '@lyrics/routing/metadata';
+import { Request, Response, JsonResponse }               from '@lyrics/http';
 
 class RouterBridgeSingleton {
     private debuggedRoutes: Array<string>;

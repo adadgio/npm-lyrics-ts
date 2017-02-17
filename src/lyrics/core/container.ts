@@ -5,8 +5,8 @@
  * like @Route(...) and @Controller()
  * Inspired by https://github.com/pleerock/routing-controllers
  */
-import { Console, KernelEvents, KernelListener, XEvent } from './../core';
-import { RouteMetadata, ControllerMetadata } from './../routing/metadata';
+import { Console, KernelEvents, KernelListener, XEvent } from '@lyrics/core';
+import { RouteMetadata, ControllerMetadata } from '@lyrics/routing/metadata';
 
 /**
  * This variable contains global annotations

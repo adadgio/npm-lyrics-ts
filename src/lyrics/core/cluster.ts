@@ -1,10 +1,10 @@
 /**
  * Wrap cluster forking/restarting into a module
  */
-import * as os from 'os';
-import * as events from 'events';
+import * as os      from 'os';
+import * as events  from 'events';
 import * as cluster from 'cluster';
-import { Console, KernelEvents, KernelListener, XEvent } from './';
+import { Console, KernelEvents, KernelListener, XEvent } from '@lyrics/core';
 
 export class Cluster {
 
@@ -18,7 +18,7 @@ export class Cluster {
         KernelListener.on(XEvent.CLUSTER_FORK, (args) => {
             Console.red(args);
         });
-        
+
         KernelListener.on(XEvent.CLUSTER_EXIT, (args) => {
             Console.red(args);
         });

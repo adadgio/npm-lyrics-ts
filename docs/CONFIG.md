@@ -34,8 +34,8 @@ Basic dependency injection (DI) is provider by the `@Inject` annotation.
 
 ```node
 // app/AcmeBundle/service/test-service.ts
-import { Service } from './../../../../lyrics/component';
-import { Inject } from './../../../../lyrics/routing';
+import { Service } from '@lyrics/component';
+import { Inject } from '@lyrics/routing';
 
 @Inject([
     { age: '%my_stuff.age%' }  // see config.*.yml

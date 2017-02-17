@@ -1,8 +1,8 @@
 /**
  * The @Controller annotation function.
  */
-import * as container from './../core/container';
-import { ControllerMetadata } from './metadata';
+import * as container         from '@lyrics/core/container';
+import { ControllerMetadata } from '@lyrics/routing/metadata';
 
 export function Controller(route: string): any {
     return function (object: Function) {

@@ -1,7 +1,7 @@
-import { App, Console }                     from './../../../../lyrics/core';
-import { Route, Controller, Inject }        from './../../../../lyrics/routing';
-import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
-import { BaseController }                   from './../../../../lyrics/controller';
+import { App, Console }                     from '@lyrics/core';
+import { Route, Controller, Inject }        from '@lyrics/routing';
+import { Request, Response, JsonResponse }  from '@lyrics/http';
+import { BaseController }                   from '@lyrics/controller';
 
 @Controller('/default')
 export class DefaultController extends BaseController

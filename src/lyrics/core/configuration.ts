@@ -1,7 +1,7 @@
 /**
  * Configuration service
  */
-import { Accessor } from './accessor';
+import { Accessor } from '@lyrics/core';
 
 export class Configuration
 {

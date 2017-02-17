@@ -7,10 +7,9 @@ import * as http     from 'http';
 import * as yaml     from 'yamljs';
 import * as express  from 'express';
 import * as parser   from 'body-parser';
-
-import * as container from './../core/container';
-import { RouterBridge, RouterUtils } from './../routing';
-import { Console, Argument, Configuration, KernelListener } from './';
+import * as container                       from '@lyrics/core/container';
+import { RouterBridge, RouterUtils }        from '@lyrics/routing';
+import { Console, Argument, Configuration } from '@lyrics/core';
 
 interface ExpressError {
     status?: number;
@@ -54,7 +53,7 @@ export class App {
         this.config.inject(yamlConfig);
         container.setApp(this);
     }
-    
+
     public run(): void
     {
         this.onDebugAll();

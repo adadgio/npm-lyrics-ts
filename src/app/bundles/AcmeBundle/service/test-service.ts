@@ -1,8 +1,8 @@
 /**
  * A simple yet demonstrative service.
  */
-import { Service, ServiceInterface } from './../../../../lyrics/component';
-import { Inject } from './../../../../lyrics/routing';
+import { Inject } from '@lyrics/routing';
+import { Service, ServiceInterface } from '@lyrics/component';
 
 @Inject([
     { age:   '%my_stuff.age%' }, // value from config.*.yml

@@ -2,8 +2,8 @@
  * The route annotation
  */
 import 'reflect-metadata';
-import * as container       from './../core/container';
-import { InjectMetadata }   from './metadata';
+import * as container       from '@lyrics/core/container';
+import { InjectMetadata }   from '@lyrics/routing/metadata';
 
 // const requiredMetadataKey = Symbol('Inject');
 export function Inject(dependencies: Array<Object>) {

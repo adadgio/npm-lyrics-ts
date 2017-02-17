@@ -3,9 +3,9 @@
  * command line arguments in your app.
  * Pattern: singleton
  */
-import * as fs from 'fs';
-import * as path from 'path';
-import * as moment from 'moment';
+import * as fs      from 'fs';
+import * as path    from 'path';
+import * as moment  from 'moment';
 
 class ConsoleSingleton
 {
@@ -48,7 +48,7 @@ class ConsoleSingleton
         let filepath = process.env.PWD + `/var/logs/${this.env}-${date}-debug.log`;
 
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
-        
+
         // @todo delete logs older tha 3 days
         // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
         // let oldFile = '?';
