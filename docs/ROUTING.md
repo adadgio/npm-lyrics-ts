@@ -8,10 +8,10 @@ Routes are defined on controller class and methods with **annotations**. Methods
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
-import { App }                from './../../../../lyrics/core';
-import { Route, Controller }  from './../../../../lyrics/routing';
-import { Request, Response }  from './../../../../lyrics/http';
-import { BaseController }     from './../../../../lyrics/controller';
+import { App }                from '@lyrics/core';
+import { Route, Controller }  from '@lyrics/routing';
+import { Request, Response }  from '@lyrics/http';
+import { BaseController }     from '@lyrics/controller';
 
 // define a base route for all
 // future controller methods
@@ -43,10 +43,10 @@ Here is a more complex example to define route requirements and fetching data fr
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
-import { App }                      from './../../../../lyrics/core';
-import { Route, Controller }        from './../../../../lyrics/routing';
-import { Request, JsonResponse }    from './../../../../lyrics/http';
-import { BaseController }           from './../../../../lyrics/controller';
+import { App }                      from '@lyrics/core';
+import { Route, Controller }        from '@lyrics/routing';
+import { Request, JsonResponse }    from '@lyrics/http';
+import { BaseController }           from '@lyrics/controller';
 
 // define a base route for all
 // future controller methods

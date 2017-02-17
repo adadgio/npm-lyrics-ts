@@ -1,9 +1,7 @@
-import * as fs from 'fs';
-import * as Handlebars from 'handlebars';
-
-import { App }              from './../core/app';
-import { Console }          from './../core/';
-import { Response, Code }   from './../http';
+import * as fs              from 'fs';
+import * as Handlebars      from 'handlebars';
+import { App, Console }     from '@lyrics/core';
+import { Response, Code }   from '@lyrics/http';
 
 export class BaseController
 {
@@ -20,7 +18,7 @@ export class BaseController
     private getChildClassName() {
         return this.constructor.name;
     }
-    
+
     protected renderView(location: string, data?: Object) {
         let path = `${this.app.getRootDir()}/app/views/${location.replace(':', '/')}`;
 

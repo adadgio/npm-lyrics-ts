@@ -1,18 +1,27 @@
 {
+    "compileOnSave": true,
     "compilerOptions": {
+        "outDir": "dist",
         "module": "commonjs",
         "target": "es6",
-        "noImplicitAny": false,
-        "sourceMap": false,
-        "outDir": "dist",
+        "sourceMap": true,
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "removeComments": true,
+        "noImplicitAny": false,
         "baseUrl": ".",
         "paths": {
-            "zutils": ["src/lyrics/utils"]
-        }
+            "@lyrics/core"       : ["src/lyrics/core"],
+            "@lyrics/core/*"     : ["src/lyrics/core/*"],
+            "@lyrics/http"       : ["src/lyrics/http"],
+            "@lyrics/utils"      : ["src/lyrics/utils"],
+            "@lyrics/routing"    : ["src/lyrics/routing"],
+            "@lyrics/routing/*"  : ["src/lyrics/routing/*"],
+            "@lyrics/component"  : ["src/lyrics/component"],
+            "@lyrics/controller" : ["src/lyrics/controller"]
+        },
+        "rootDir": "."
     },
     "exclude": [
         "dist",

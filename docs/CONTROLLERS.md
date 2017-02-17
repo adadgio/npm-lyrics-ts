@@ -7,10 +7,10 @@ Request and response
 Controllers must extend `BaseController` and methods must return `ResponseInterface` objects.
 
 ```node
-import { App }                              from './../../../../lyrics/core';
-import { Route, Controller }                from './../../../../lyrics/routing';
-import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
-import { BaseController }                   from './../../../../lyrics/controller';
+import { App }                              from '@lyrics/core';
+import { Route, Controller }                from '@lyrics/routing';
+import { Request, Response, JsonResponse }  from '@lyrics/http';
+import { BaseController }                   from '@lyrics/controller';
 
 @Controller('/default')
 export class DefaultController extends BaseController

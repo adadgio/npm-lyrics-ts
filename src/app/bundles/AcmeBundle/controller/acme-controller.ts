@@ -1,7 +1,7 @@
-import { App, Console }                     from './../../../../lyrics/core';
-import { BaseController }                   from './../../../../lyrics/controller';
-import { Route, Controller, Inject }        from './../../../../lyrics/routing';
-import { Request, Response, JsonResponse }  from './../../../../lyrics/http';
+import { App, Console }                     from '@lyrics/core';
+import { BaseController }                   from '@lyrics/controller';
+import { Route, Controller, Inject }        from '@lyrics/routing';
+import { Request, Response, JsonResponse }  from '@lyrics/http';
 
 @Controller('/acme')
 export class AcmeController extends BaseController

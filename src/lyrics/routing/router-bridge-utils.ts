@@ -3,11 +3,10 @@
  * to actually set route listeners
  */
 import 'reflect-metadata';
-import * as express             from 'express';
-import * as container           from './../core/container';
-import { App, Console }         from './../core';
-import { RouteMetadata, ActionTypes }       from './metadata';
-import { Request, Response, JsonResponse }  from './../http';
+import * as express                         from 'express';
+import { App, Console }                     from '@lyrics/core';
+import { RouteMetadata, ActionTypes }       from '@lyrics/routing/metadata';
+import { Request, Response, JsonResponse }  from '@lyrics/http';
 
 class RouterBridgeUtilsSingleton {
     constructor() {
@@ -64,7 +63,7 @@ class RouterBridgeUtilsSingleton {
                 let required = requirements[HEADERS][key];
             }
         }
-        
+
         return errors;
     }
 
