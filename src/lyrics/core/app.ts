@@ -10,6 +10,7 @@ import * as parser   from 'body-parser';
 import * as container                       from '@lyrics/core/container';
 import { RouterBridge, RouterUtils }        from '@lyrics/routing';
 import { Console, Argument, Configuration } from '@lyrics/core';
+import { DependencyLoader }                 from '@lyrics/core';
 
 interface ExpressError {
     status?: number;
@@ -29,7 +30,7 @@ export class App {
     private express: express.Application;
     private services: Object = {};
     private controllers: any;
-    
+
     constructor()
     {
         // use argument module to retrieve and environment variable
@@ -61,17 +62,17 @@ export class App {
         // prepare express and middlewares
         this.express = express();
         this.server = http.createServer(this.express);
-        this.middlewareSetup();
+        this.middleware();
 
         // declare and prepare router
         this.router = express.Router();
-        this.routingSetup();
+        this.routing();
 
         // open ports and listen
         this.server.listen(this.config.get('framework.express.port'));
     }
 
-    private middlewareSetup(): void
+    private middleware(): void
     {
         // tell express to parse incoming body from json to object
         this.express.use(parser.json());
@@ -87,7 +88,7 @@ export class App {
      * Creates routing from controllers explicitely
      * decorated with @Controller or @Route annotations.
      */
-    private routingSetup()
+    private routing()
     {
         // just read the controller (for typescript compiler)
         // there is nothing to do... the annotations are
@@ -144,33 +145,29 @@ export class App {
      */
     public import(bundle: string): App
     {
-        let srvcsPath = `./../../app/bundles/${bundle}/service`;
-        let ctrlsPath = `./../../app/bundles/${bundle}/controller`;
+        // let srvcsPath = `./../../app/bundles/${bundle}/service`;
+        // let ctrlsPath = `./../../app/bundles/${bundle}/controller`;
+        let deps = DependencyLoader.readBundles(bundle);
 
         // load all controllers from AcmeBundle/controller/index.ts
         // there is nothing to do afterwards, typescript will read
         // controllers annotations and router bridge then know that
         // it will need to create instances at build time
-        try {
-            let controllers = require(ctrlsPath);
-        } catch (e) {
-            // silence the exception
-            Console.white(`Some controllers might be missing or malformed, check ${ctrlsPath}`);
-        }
+        // let controllers = deps.controllers;
 
         // register all services in the container
         // from AcmeBundle/service/index.ts
-        try {
-            let services = require(srvcsPath);
-            for (let className in services) {
-                let service = services[className];
-                let serviceId = this.createServiceName(className);
-                this.register(serviceId, service);
-            }
-        } catch (e) {
-            // silence the exception
-            Console.white(`Some services might be missing or malformed, check ${srvcsPath}`);
+        let services = deps.services;
+
+        for (let className in services) {
+            let service = services[className];
+            let serviceId = this.createServiceName(className);
+            this.register(serviceId, service);
         }
+
+        // nothing to to with the models now that typescript
+        // has read them (as soon as dependency loader required them)
+        // let models = deps.models
 
         return this;
     }

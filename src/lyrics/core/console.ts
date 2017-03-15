@@ -68,7 +68,7 @@ class ConsoleSingleton
 
         return this;
     }
-    
+
     log(text: string): void {
         this.writeLog(text);
         console.log('\x1b[37m%s\x1b[0m', text);
@@ -89,11 +89,12 @@ class ConsoleSingleton
         console.log('\x1b[33m%s\x1b[0m', text);
     }
 
-    error(text: string): void {
+    error(text: string, quit: number = null): void {
         this.writeLog(text);
         console.log('\x1b[31m%s\x1b[0m', text);
+        if (1 === quit) { process.exit(0); } // process will be reforked
     }
-
+    
     magenta(text: string): void {
         this.writeLog(text);
         console.log('\x1b[35m%s\x1b[0m', text);

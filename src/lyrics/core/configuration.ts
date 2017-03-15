@@ -22,6 +22,10 @@ export class Configuration
         return this.config;
     }
 
+    isNotNull(key: string) {
+        return (this.get(key) !== null) ? true : false;
+    }
+
     public get(key: string)
     {
         return (new Accessor(this.config)).getValue(key);

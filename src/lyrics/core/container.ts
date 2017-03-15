@@ -74,7 +74,8 @@ export function addServiceInjection(name: string, injectionKey: string, property
     _$_container.injections[name].push({ key: injectionKey, property: propertyName });
 }
 export function initService(name: string) {
-    KernelEvents.emit('container:service:inited', `container.ts: Service ${name} inited`);
+    KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { info: `container: Service ${name} inited` });
+    KernelEvents.emit(`${XEvent.CONTAINER_SERVICE_REQUESTED}:${name}`, { info: `container: Service ${name} inited` });
 
     let serviceInstance = new _$_container.services[name].target();
     _$_container.services[name].instance = serviceInstance;
@@ -90,7 +91,7 @@ export function initService(name: string) {
                 // the param is aliased with "@", its a service we need to inject
 
                 if (unalias(dependecy.key) === name) {
-                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
+                    Console.exception(`container: Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
                 }
 
                 let diInstance = getServiceInstance(unalias(dependecy.key));
@@ -104,11 +105,11 @@ export function initService(name: string) {
 
             } else {
                 // its nothing
-                Console.exception(`container.ts Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
+                Console.exception(`container: Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
             }
         }
     }
-    
+
     if (typeof _$_container.services[name].instance['injector'] === 'function') {
         _$_container.services[name].instance['injector'].apply(serviceInstance, [diArgs]);
     }
@@ -123,7 +124,8 @@ export function getServiceInstance(name: string) {
          initService(name);
      }
 
-     KernelEvents.emit('container:service:requested', `container.ts: Service ${name} requested`);
+     KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { service: name, info: `container.ts: Service ${name} requested` });
+     KernelEvents.emit(`${XEvent.CONTAINER_SERVICE_REQUESTED}:${name}`, { info: `container.ts: Service ${name} requested` });
      return _$_container.services[name].instance;
 }
 

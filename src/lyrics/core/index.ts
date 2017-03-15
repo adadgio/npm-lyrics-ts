@@ -10,3 +10,4 @@ export * from './xevent';
 export * from './kernel-events';
 export * from './kernel-listener';
 export * from './configuration';
+export * from './dependency-loader';
