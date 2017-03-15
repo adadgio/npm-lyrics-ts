@@ -16,8 +16,7 @@ export class DefaultController extends BaseController
     indexAction()
     {
         let name = 'Obama';
-
-        return this.renderHtml('<p>Hello {{name}}</p>');
+        return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
 
     @Route('/post-demo', {
@@ -43,5 +42,25 @@ export class DefaultController extends BaseController
 
         // return a valid response object
         return new JsonResponse({ message: 'user successfuly created', person: person });
+    }
+
+    @Route('/test-orm', {
+        type: 'GET'
+    })
+    testOrmAction()
+    {
+        let orm = this.get('orm.service');
+
+        // let sequelize = orm.sequelize();
+        //
+        // let romain = orm.create('user', { name: "Romain" });
+        //
+        // sequelize.query("SELECT * FROM `test` LIMIT 10", { type: sequelize.QueryTypes.SELECT})
+        //     .then(function(rows) {
+        //         console.log(rows);
+        //         // We don't need spread here, since only the results will be returned for select queries
+        //     })
+
+        return this.renderHtml('Orm type: {{type}}', { type: 'unknown' });
     }
 }

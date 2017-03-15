@@ -29,7 +29,7 @@ export class App {
     private express: express.Application;
     private services: Object = {};
     private controllers: any;
-
+    
     constructor()
     {
         // use argument module to retrieve and environment variable
@@ -61,17 +61,17 @@ export class App {
         // prepare express and middlewares
         this.express = express();
         this.server = http.createServer(this.express);
-        this.middleware();
+        this.middlewareSetup();
 
         // declare and prepare router
         this.router = express.Router();
-        this.routing();
+        this.routingSetup();
 
         // open ports and listen
         this.server.listen(this.config.get('framework.express.port'));
     }
 
-    private middleware(): void
+    private middlewareSetup(): void
     {
         // tell express to parse incoming body from json to object
         this.express.use(parser.json());
@@ -87,7 +87,7 @@ export class App {
      * Creates routing from controllers explicitely
      * decorated with @Controller or @Route annotations.
      */
-    private routing()
+    private routingSetup()
     {
         // just read the controller (for typescript compiler)
         // there is nothing to do... the annotations are
@@ -151,15 +151,25 @@ export class App {
         // there is nothing to do afterwards, typescript will read
         // controllers annotations and router bridge then know that
         // it will need to create instances at build time
-        let controllers = require(ctrlsPath);
+        try {
+            let controllers = require(ctrlsPath);
+        } catch (e) {
+            // silence the exception
+            Console.white(`Some controllers might be missing or malformed, check ${ctrlsPath}`);
+        }
 
         // register all services in the container
         // from AcmeBundle/service/index.ts
-        let services = require(srvcsPath);
-        for (let className in services) {
-            let service = services[className];
-            let serviceId = this.createServiceName(className);
-            this.register(serviceId, service);
+        try {
+            let services = require(srvcsPath);
+            for (let className in services) {
+                let service = services[className];
+                let serviceId = this.createServiceName(className);
+                this.register(serviceId, service);
+            }
+        } catch (e) {
+            // silence the exception
+            Console.white(`Some services might be missing or malformed, check ${srvcsPath}`);
         }
 
         return this;

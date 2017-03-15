@@ -12,7 +12,7 @@ export class Service implements ServiceInterface {
             return;
         }
 
-        // covnert arguments into an array
+        // convert arguments into an array
         // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/arguments
         let thisProp: any = {};
         let arrArgs = [].slice.call(arguments);

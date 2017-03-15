@@ -68,7 +68,7 @@ class ConsoleSingleton
 
         return this;
     }
-
+    
     log(text: string): void {
         this.writeLog(text);
         console.log('\x1b[37m%s\x1b[0m', text);
@@ -76,7 +76,7 @@ class ConsoleSingleton
 
     white(text: string): void {
         this.writeLog(text);
-        console.log('\x1b[107;35m%s\x1b[0m', text);
+        console.log('\x1b[37m%s\x1b[0m', text);
     }
 
     red(text: string): void {
