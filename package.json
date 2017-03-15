@@ -7,8 +7,11 @@
   "scripts": {
     "start": "npm run build:live",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev",
-    "build": "tsc && npm run build:task",
+    "build": "tsc && npm run build:task && npm link",
     "build:task": "bash build.sh"
+  },
+  "bin": {
+    "lyrics:require": "./dist/src/lyrics/command/install.js"
   },
   "keywords": [
     "node",
@@ -19,11 +22,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^7.0.0",
+    "commander": "^2.9.0",
     "copyfiles": "^1.0.0",
     "nodemon": "^1.11.0",
     "ts-node": "^2.1.0",
     "typescript": "^2.1.6",
-    "typescript-watcher": "^0.0.4"
+    "typescript-watcher": "^0.0.4",
+    "unzip": "^0.1.11"
   },
   "dependencies": {
     "@types/body-parser": "0.0.33",
@@ -35,21 +40,25 @@
     "@types/yamljs": "^0.2.30",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
     "handlebars": "^4.0.6",
     "module-alias": "^2.0.0",
     "moment": "^2.17.1",
+    "mysql": "^2.13.0",
     "reflect-metadata": "^0.1.9",
-    "request": "^2.79.0",
+    "request": "^2.81.0",
+    "sequelize": "^3.30.2",
     "socket.io": "^1.7.2",
+    "sqlite3": "^3.1.8",
     "yamljs": "^0.2.8"
   },
-    "_moduleAliases": {
-      "@root"               : ".",
-      "@lyrics/core"        : "src/lyrics/core",
-      "@lyrics/http"        : "src/lyrics/http",
-      "@lyrics/utils"       : "src/lyrics/utils",
-      "@lyrics/routing"     : "src/lyrics/routing",
-      "@lyrics/component"   : "src/lyrics/component",
-      "@lyrics/controller"  : "src/lyrics/controller"
+  "_moduleAliases": {
+    "@root": ".",
+    "@lyrics/core": "src/lyrics/core",
+    "@lyrics/http": "src/lyrics/http",
+    "@lyrics/utils": "src/lyrics/utils",
+    "@lyrics/routing": "src/lyrics/routing",
+    "@lyrics/component": "src/lyrics/component",
+    "@lyrics/controller": "src/lyrics/controller"
   }
 }

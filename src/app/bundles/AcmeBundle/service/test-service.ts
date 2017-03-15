@@ -11,11 +11,21 @@ import { Service, ServiceInterface } from '@lyrics/component';
 export class TestService extends Service
 {
     /**
-     * Required when extending base services
-     * you need this for proper DI injection
+     * Required when extending base services you
+     * need this for proper DI injection, but service
+     * deps are not injected yet ("this.injected" is empty).
      */
     constructor() {
         super();
+    }
+
+    /**
+     * From here dependencies marked in service class
+     * annotations above were successfuly injected by the
+     * container ("this.injected" is not empty).
+     */
+    onInit() {
+
     }
 
     public greet(name: string) {

@@ -16,8 +16,7 @@ export class DefaultController extends BaseController
     indexAction()
     {
         let name = 'Obama';
-
-        return this.renderHtml('<p>Hello {{name}}</p>');
+        return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
 
     @Route('/post-demo', {
