@@ -94,12 +94,13 @@ export class OrmService extends Service implements ServiceInterface
     }
 
     persist(model: ModelInterface): Promise<ModelInterface> {
+
         return new Promise((resolve, reject) => {
-            this.getModel(model.constructor.name).create().then(model => {
-                resolve(model);
+            this.getModel(model.constructor.name).create(model).then(result => {
+                resolve(result);
             }).catch(e => {
                 Console.error(`${e}`);
-                reject(null);
+                resolve(null);
             });
         });
     }
