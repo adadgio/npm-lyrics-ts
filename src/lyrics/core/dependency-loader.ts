@@ -58,14 +58,14 @@ class DependencyLoaderSingleton {
     public require(path: string)
     {
         let deps: any = null;
-
+        let basename = pathes.basename(path);
+        let shortpath = path.replace('./../../', '');
+        
         // then try to load, failure here will be a logged error
         try {
             deps = require(path);
         } catch (e) {
-            let basename = pathes.basename(path);
-            let shortpath = path.replace('./../../', '');
-            Console.lite(`dependency-loader: No barrel found in ${shortpath} (index.ts for ${basename}) `);
+            // Console.lite(`dependency-loader: No barrel found in ${shortpath} (index.ts for ${basename})`);
         }
 
         return deps;

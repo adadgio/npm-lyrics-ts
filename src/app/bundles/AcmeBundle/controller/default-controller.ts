@@ -2,6 +2,7 @@ import { App, Console }                     from '@lyrics/core';
 import { Route, Controller, Inject }        from '@lyrics/routing';
 import { Request, Response, JsonResponse }  from '@lyrics/http';
 import { BaseController }                   from '@lyrics/controller';
+import { User }                             from '../../OrmBundle/model';
 
 @Controller('/default')
 export class DefaultController extends BaseController
@@ -15,6 +16,19 @@ export class DefaultController extends BaseController
     })
     indexAction()
     {
+        // function sleep(ms) {
+        //     var start = new Date().getTime(), expire = start + ms;
+        //     while (new Date().getTime() < expire) { }
+        //     return;
+        // }
+        let orm = this.get('orm.service');
+
+        let user = new User();
+        user.setName('Romain');
+        orm.persist(user).then(model => {
+            console.log(model);
+        });
+        
         let name = 'Obama';
         return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }

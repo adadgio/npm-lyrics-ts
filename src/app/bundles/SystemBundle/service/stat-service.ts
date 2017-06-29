@@ -4,7 +4,11 @@ export class StatService {
     constructor() {
 
     }
-    
+
+    onInit() {
+        
+    }
+
     broadcast(then: Function, interval: number = 900) {
         let info = { arch: os.arch(), loadavg: null, numCpus: os.cpus().length, usage: null };
 

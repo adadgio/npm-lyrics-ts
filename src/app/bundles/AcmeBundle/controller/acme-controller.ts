@@ -20,7 +20,7 @@ export class AcmeController extends BaseController
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
 
-        return new Response('Acme demo');
+        return new Response(`Acme demo ${item}`);
     }
 
     @Route('/other', { type: 'GET' })

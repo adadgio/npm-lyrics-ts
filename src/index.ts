@@ -19,12 +19,20 @@ clustering.start(f => {
 
     app
         .debug(true)
+        .import('OrmBundle')
         .import('SystemBundle')
         .import('AcmeBundle')
         .setWebroot(`${__dirname}/app/public`)
     ;
 
+    // some services you might want to ini here at start up
+    // and not on every request, do it here
+    app.preloadServices(['stat.service', 'orm.service']);
+
+    // at last and only at last
+    // run your app
     app.run();
+
 
     // show total boot time for debug purposes
     // can also use hrend[0] for value in seconds

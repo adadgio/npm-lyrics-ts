@@ -19,7 +19,7 @@ export class OsController extends BaseController
     setupSocket() {
         let stat = this.get('stat.service');
         this.socket = io(this.app.server);
-
+        
         this.socket.on('connection', (client) => {
             // eventually do something when client disconnects...
             this.socket.on('disconnect', () => {

@@ -28,7 +28,8 @@ export class App {
 
     private webroot: string;
     private express: express.Application;
-    private services: Object = {};
+    // private services: Object = {};
+    private preloadedServices: Array<string> = [];
     private controllers: any;
 
     constructor()
@@ -58,6 +59,14 @@ export class App {
     public run(): void
     {
         this.onDebugAll();
+        
+        // preload services if applicable note that services are never inited twice if
+        // properly done, that is using the container method (container::initService())
+        for (let serviceId in container.getRegisteredServices()) {
+            if (this.preloadedServices.indexOf(serviceId) > -1) {
+                container.initService(serviceId);
+            }
+        }
 
         // prepare express and middlewares
         this.express = express();
@@ -165,10 +174,6 @@ export class App {
             this.register(serviceId, service);
         }
 
-        // nothing to to with the models now that typescript
-        // has read them (as soon as dependency loader required them)
-        // let models = deps.models
-
         return this;
     }
 
@@ -254,5 +259,11 @@ export class App {
     public getConfigValue(name: string)
     {
         return this.config.get(name);
+    }
+
+    public preloadServices(names: Array<string>)
+    {
+        this.preloadedServices = names;
+        return this;
     }
 }
