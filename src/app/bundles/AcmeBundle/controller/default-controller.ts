@@ -23,12 +23,13 @@ export class DefaultController extends BaseController
         // }
         let orm = this.get('orm.service');
 
+        console.log(orm);
         let user = new User();
         user.setName('Romain');
         orm.persist(user).then(model => {
             console.log(model);
         });
-        
+
         let name = 'Obama';
         return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
