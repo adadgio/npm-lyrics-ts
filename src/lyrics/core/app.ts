@@ -67,6 +67,13 @@ export class App {
             if (this.preloadedServices.indexOf(serviceId) > -1) {
                 container.initService(serviceId);
             }
+
+            // launch services defined as sub processes (@Process decorator)
+            let serviceInstance = container.getServiceInstance(serviceId);
+            let isDefinedAsProcess = Reflect.getMetadata('process', serviceInstance.constructor);
+            if (isDefinedAsProcess) {
+                // nothing to do my friend
+            }
         }
 
         // prepare express and middlewares

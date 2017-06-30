@@ -13,3 +13,11 @@ framework:
 my_stuff:
     name: Romain
     age:  31
+
+firebase:
+    apiKey: "AIzaSyCA_esrGJt5XAFEwPqcZFSXHNN944NgShk"
+    authDomain: "blank-159318.firebaseapp.com"
+    databaseURL: "https://blank-159318.firebaseio.com"
+    projectId: "blank-159318"
+    storageBucket: "blank-159318.appspot.com"
+    messagingSenderId: "914202577156"
