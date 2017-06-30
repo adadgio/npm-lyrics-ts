@@ -5,7 +5,6 @@
 require('./lyrics/register');
 // import * as register from './lyrics/register';
 
-
 let hrstart = process.hrtime();
 import { App, Cluster, Console } from '@lyrics/core';
 

@@ -7,8 +7,8 @@
   "scripts": {
     "start": "npm run build:live",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev",
-    "build": "tsc && npm run build:task && npm link",
-    "build:task": "bash build.sh"
+    "build": "tsc && npm run assets:install && npm link",
+    "assets:install": "cp package.json dist/ && bash build.sh"
   },
   "bin": {
     "lyrics:require": "./dist/src/lyrics/command/install.js"
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^7.0.0",
     "commander": "^2.9.0",
-    "copyfiles": "^1.0.0",
+    "copyfiles": "^1.2.0",
     "nodemon": "^1.11.0",
     "ts-node": "^2.1.0",
     "typescript": "^2.1.6",

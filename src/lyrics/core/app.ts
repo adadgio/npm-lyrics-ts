@@ -225,7 +225,7 @@ export class App {
     public getInfo() {
         return `A lyrics application`;
     }
-    
+
     /**
      * Get app environment.
      * Environment
