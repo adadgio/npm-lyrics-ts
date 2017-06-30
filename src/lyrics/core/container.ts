@@ -113,7 +113,7 @@ export function initService(name: string): void {
     if (typeof _$_container.services[name].instance['injector'] === 'function') {
         _$_container.services[name].instance['injector'].apply(serviceInstance, [diArgs]);
     }
-    
+
     // run after init callback method if it exists (on 1st init only)
     if (typeof(_$_container.services[name].instance['onInit']) === 'function') {
         _$_container.services[name].instance['onInit']();

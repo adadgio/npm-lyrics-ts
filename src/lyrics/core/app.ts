@@ -2,15 +2,16 @@
  * Main app component wrapper
  * Handle env variables, express and loads routing
  */
-import * as fs       from 'fs';
-import * as http     from 'http';
-import * as yaml     from 'yamljs';
-import * as express  from 'express';
-import * as parser   from 'body-parser';
+import * as fs          from 'fs';
+import * as http        from 'http';
+import * as yaml        from 'yamljs';
+import * as express     from 'express';
+import * as parser      from 'body-parser';
+import * as child       from 'child_process';
 import * as container                       from '@lyrics/core/container';
 import { RouterBridge, RouterUtils }        from '@lyrics/routing';
 import { Console, Argument, Configuration } from '@lyrics/core';
-import { DependencyLoader }                 from '@lyrics/core';
+import { PathFinder, DependencyLoader }     from '@lyrics/core';
 
 interface ExpressError {
     status?: number;
@@ -49,7 +50,7 @@ export class App {
 
         // save configuration parameters into app
         // and basic default app configuration vars
-        this.root = process.env.PWD + '/src';
+        this.root = PathFinder.getRootDir(); // path to the src dir
         this.xdebug = false;
         this.config = new Configuration();
         this.config.inject(yamlConfig);
@@ -59,7 +60,7 @@ export class App {
     public run(): void
     {
         this.onDebugAll();
-        
+
         // preload services if applicable note that services are never inited twice if
         // properly done, that is using the container method (container::initService())
         for (let serviceId in container.getRegisteredServices()) {
@@ -224,7 +225,7 @@ export class App {
     public getInfo() {
         return `A lyrics application`;
     }
-
+    
     /**
      * Get app environment.
      * Environment

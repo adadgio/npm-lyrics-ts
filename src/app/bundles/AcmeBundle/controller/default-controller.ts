@@ -25,7 +25,7 @@ export class DefaultController extends BaseController
 
         let user = new User();
         user.setName('Romain');
-        
+
         orm.persist(user).then(model => {
 
         });
@@ -47,7 +47,6 @@ export class DefaultController extends BaseController
     })
     createAction(request: Request)
     {
-        // console.log(req.body, req.headers);
         // ...some other logic to persist user object
         let person: Object = {
             id: request.getParam('id'),

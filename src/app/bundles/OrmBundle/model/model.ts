@@ -7,7 +7,7 @@ export interface ModelInterface {
 
 export class Model implements ModelInterface {
     id: string|number;
-
+    
     newUuid() {
         return 'gfhj567hjklqsd';
     }

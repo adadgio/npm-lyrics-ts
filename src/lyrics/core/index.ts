@@ -1,6 +1,7 @@
 /**
  * Lyrics namespace import
  */
+export * from './pathfinder';
 export * from './app';
 export * from './cluster';
 export * from './accessor';

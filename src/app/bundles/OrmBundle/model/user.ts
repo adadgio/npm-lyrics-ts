@@ -1,3 +1,4 @@
+import { Uuid }             from '@lyrics/utils';
 import { Table, Column }    from '../../OrmBundle/annotation';
 import { Model }            from '../../OrmBundle/model';
 
@@ -8,12 +9,12 @@ export class User extends Model {
 
     @Column({ type: 'string' })
     name: string;
-    
+
     constructor() {
         super();
-        this.id = this.newUuid();
+        this.id = Uuid.create();
     }
-
+    
     setName(name: string) {
         this.name = name;
         return this;
