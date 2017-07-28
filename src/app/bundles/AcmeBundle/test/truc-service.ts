@@ -4,7 +4,7 @@
 import { Service, Inject }  from '@lyrics/annotation';
 import { BaseService }      from '@lyrics/component';
 
-@Service('test.service')
+@Service('truc.service')
 @Inject([
     { age: '%my_stuff.age%' },      // value from config.*.yml
     { other: '@other.service' },

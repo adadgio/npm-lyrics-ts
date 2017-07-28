@@ -6,7 +6,8 @@
  * Inspired by https://github.com/pleerock/routing-controllers
  */
 import { Console, KernelEvents, KernelListener, XEvent } from '@lyrics/core';
-import { RouteMetadata, ControllerMetadata } from '@lyrics/routing/metadata';
+import { ControllerMeta }   from '@lyrics/annotation';
+import { RouteMetadata }    from '@lyrics/routing/metadata';
 
 /**
  * This variable contains global annotations
@@ -85,27 +86,29 @@ export function initService(name: string): void {
 
     if (typeof _$_container.injections[selfKlass] !== 'undefined') {
 
-        for (let dependecy of _$_container.injections[selfKlass]) {
+        for (let dependency of _$_container.injections[selfKlass]) {
+            // skitp any injections into the controllers
 
-            if (isAliased(dependecy.key)) {
+
+            if (isAliased(dependency.key)) {
                 // the param is aliased with "@", its a service we need to inject
 
-                if (unalias(dependecy.key) === name) {
-                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
+                if (unalias(dependency.key) === name) {
+                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependency.key} into ${name}`);
                 }
 
-                let diInstance = getServiceInstance(unalias(dependecy.key));
-                diArgs[dependecy.property] = diInstance;
+                let diInstance = getServiceInstance(unalias(dependency.key));
+                diArgs[dependency.property] = diInstance;
 
-            } else if (isPercent(dependecy.key)) {
+            } else if (isPercent(dependency.key)) {
                 // else its not a service but a parameter from config to inject
-                let paramName = unpercent(dependecy.key);
+                let paramName = unpercent(dependency.key);
                 let paramValue = _$_container.app.config.get(paramName);
-                diArgs[dependecy.property] = paramValue;
+                diArgs[dependency.property] = paramValue;
 
             } else {
                 // its nothing
-                Console.exception(`container.ts Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
+                Console.exception(`container.ts Unable to inject ${dependency.key} into ${name}, reference must be a @service of %config.accessor%`);
             }
         }
     }
@@ -175,7 +178,13 @@ export function addRouteMeta(metadata: RouteMetadata) {
  * Add controllers base annotation metadata to container
  * Controllers annotations go in controller base routes
  */
-export function addControllerMeta(metadata: ControllerMetadata) {
+export function registerController(target: Object) {
+    const ctrlMetadata = Reflect.getMetadata('controllerMetadata', target);
+    // for controllers, we don't register the but pass the metadata
+    // to the container. It will be the router bridge to read them and create routes
+    this.addControllerMeta(ctrlMetadata);
+}
+export function addControllerMeta(metadata: ControllerMeta) {
     let className = metadata.getClassName();
     _$_container.controllers[className] = metadata;
 }

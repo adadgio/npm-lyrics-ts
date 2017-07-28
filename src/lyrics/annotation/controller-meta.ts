@@ -1,4 +1,4 @@
-export class ControllerMetadata {
+export class ControllerMeta {
     target: Function
     classname: string;
     route: string;

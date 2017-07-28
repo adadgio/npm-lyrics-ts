@@ -9,7 +9,8 @@ import { InjectMetadata }   from '@lyrics/routing/metadata';
 export function Inject(dependencies: Array<Object>) {
 
     return function (target: any, decoratedPropertyName? : string): void {
-         let targetType : Function;
+        const original = target;
+        let targetType: Function;
 
         if (typeof target === 'function' && decoratedPropertyName === undefined) {
             targetType = target;
@@ -19,7 +20,7 @@ export function Inject(dependencies: Array<Object>) {
 
         let serviceClassName = target.prototype.constructor.name;
 
-        // for each [{ other: '@ither.service' }]
+        // for each [{ other: '@other.service' }]
         for (let dependecy of dependencies) {
             // then { other: '@other.service' }
             for (let propertyName in dependecy) {
@@ -27,5 +28,7 @@ export function Inject(dependencies: Array<Object>) {
                 container.addServiceInjection(serviceClassName, injectionKey, propertyName);
             }
         }
+        
+        return original;
     };
 }

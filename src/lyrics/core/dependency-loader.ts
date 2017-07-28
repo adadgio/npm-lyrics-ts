@@ -3,10 +3,11 @@
  * controllers, services and models in each bundle
  * and let typescript analyse it
  */
-import * as fs          from 'fs';
+import * as fs          from 'fs-extra';
 import * as pathes      from 'path';
 import { Console }      from '@lyrics/core';
 import { PathFinder }   from '@lyrics/core';
+const klawSync = require('klaw-sync');
 
 class DependencyLoaderModule {
 
@@ -25,30 +26,62 @@ class DependencyLoaderModule {
      */
     public readBundles(bundle: string)
     {
-        let bundleBasepath = `./../../app/bundles/${bundle}`;
+        let controllers = {};
+        let services = {};
 
-        let srvcsPath = `${bundleBasepath}/service`,
-            ctrlsPath = `${bundleBasepath}/controller`,
-            modelsPath = `${bundleBasepath}/model`;
+        Console.info(`dependency-loader.ts reading bundles...`);
+        // the job here is basically to  read all the files in
+        // the bundle recursively and look for annotations
+
+        const srcDir = PathFinder.getRootDir();
+        const bundleDir = pathes.normalize(`${srcDir}/app/bundles/${bundle}`);
+
+        const files = klawSync(bundleDir, { nodir: true });
+
+        for (let file of files) {
+            const ext = pathes.extname(file.path);
+
+            if (['.ts', '.tsx', '.js'].indexOf(ext) === -1) { continue; }
+            // we just need to do that so that typescript reads the file
+            // instances will be created and passed to container and
+            // deleted here afterwards
+
+            // retrieve the { AcmeController: [Function: AcmeController] }
+            const importedObject = require(file.path); // require does obj with key: class name -> function actual class
+            const nameOfClass = Object.keys(importedObject)[0];
+            const finalClass = importedObject[nameOfClass];
+
+            // get target meta data
+            const serviceMetadata = Reflect.getMetadata('serviceMetadata', finalClass);
+            const controllerMetadata = Reflect.getMetadata('controllerMetadata', finalClass);
+
+            if (serviceMetadata) {
+
+                const serviceName = serviceMetadata.getName();
+                services[serviceName] = finalClass;
+                
+            } else if (controllerMetadata) {
+
+                controllers[nameOfClass] = finalClass;
+
+            } else {
+                // yeah ?
+            }
+        }
 
         // load all controllers from AcmeBundle/controller/index.ts
         // there is nothing to do afterwards, typescript will read
         // controllers annotations and router bridge then know that
         // it will need to create instances at build time
-        let controllers = this.require(ctrlsPath);
+        // let controllers = this.require(ctrlsPath);
 
-        // register all services in the container
-        // from AcmeBundle/service/index.ts
-        let services = this.require(srvcsPath);
-
-        // let typescript read models
-        // from AcmeBundle/modle/index.ts
-        let models = this.require(modelsPath);
+        // // register all services in the container
+        // // from AcmeBundle/service/index.ts
+        // let services = this.require(srvcsPath);
 
         return {
             controllers: controllers,
             services: services,
-            models: models,
         }
     }
 
@@ -79,7 +112,7 @@ class DependencyLoaderModule {
             Console.lite(`dependency-loader: Failed to require ${shortpath}, no barrel found or evaluating script failed`);
             Console.error(e);
         }
-        
+
         return deps;
     }
 }

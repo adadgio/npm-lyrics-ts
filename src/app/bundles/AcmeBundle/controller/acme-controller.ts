@@ -1,6 +1,6 @@
 import { App, Console }                     from '@lyrics/core';
 import { BaseController }                   from '@lyrics/controller';
-import { Route, Controller, Inject }        from '@lyrics/routing';
+import { Service, Route, Controller, Inject }        from '@lyrics/annotation';
 import { Request, Response, JsonResponse }  from '@lyrics/http';
 
 @Controller('/acme')
@@ -19,7 +19,7 @@ export class AcmeController extends BaseController
         // access full config or config value
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
-        
+
         return new Response(`Acme demo ${item}`);
     }
 
