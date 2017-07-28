@@ -48,8 +48,8 @@ class ConsoleSingleton
         let filepath = process.env.PWD + `/var/logs/${this.env}-${date}-debug.log`;
 
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
-        
-        // @todo delete logs older tha 3 days
+
+        // @todo delete logs older 3 days
         // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
         // let oldFile = '?';
         // fs.unlinkSync(oldFile);
@@ -57,14 +57,6 @@ class ConsoleSingleton
 
     setEnv(env: string, traceDisabled: boolean = false) {
         this.env = env;
-
-        process.on('Error', function (error) {
-            //log error.stack?
-        });
-
-        // if (this.env === 'prod' || this.env === 'production' || traceDisabled === true) {
-        //     process.env.NODE_ENV === 'production';
-        // }
 
         return this;
     }

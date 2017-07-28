@@ -17,15 +17,13 @@ clustering.start(f => {
 
     app
         .debug(true)
-        .import('OrmBundle')
-        .import('SystemBundle')
         .import('AcmeBundle')
         .setWebroot(`${__dirname}/app/public`)
     ;
 
     // some services you might want to ini here at start up
     // and not on every request, do it here
-    app.preloadServices(['stat.service', 'orm.service', 'listener.service']);
+    app.preloadServices([]);
 
     // at last and only at last
     // run your app
