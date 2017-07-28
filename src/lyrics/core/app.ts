@@ -64,16 +64,12 @@ export class App {
         // preload services if applicable note that services are never inited twice if
         // properly done, that is using the container method (container::initService())
         for (let serviceId in container.getRegisteredServices()) {
-            if (this.preloadedServices.indexOf(serviceId) > -1) {
+            if (this.preloadedServices.indexOf(serviceId) > -1 && !container.isServiceInited(serviceId)) {
                 container.initService(serviceId);
             }
 
             // launch services defined as sub processes (@Process decorator)
             let serviceInstance = container.getServiceInstance(serviceId);
-            let isDefinedAsProcess = Reflect.getMetadata('process', serviceInstance.constructor);
-            if (isDefinedAsProcess) {
-                // nothing to do my friend
-            }
         }
 
         // prepare express and middlewares
@@ -107,14 +103,6 @@ export class App {
      */
     private routing()
     {
-        // just read the controller (for typescript compiler)
-        // there is nothing to do... the annotations are
-        // automatically read here by ts (??). Strange but it works
-        // router bridge is the one responsible for creating the ctrl instances
-        // for (let ctrl in this.controllers) {
-        //     // let controller = new controllers[ctrl](this);
-        // }
-
         RouterBridge.setRoutes();
 
         // tell the express app to all all the
@@ -162,35 +150,21 @@ export class App {
      */
     public import(bundle: string): App
     {
-        // let srvcsPath = `./../../app/bundles/${bundle}/service`;
-        // let ctrlsPath = `./../../app/bundles/${bundle}/controller`;
-        let deps = DependencyLoader.readBundles(bundle);
-
-        // load all controllers from AcmeBundle/controller/index.ts
-        // there is nothing to do afterwards, typescript will read
-        // controllers annotations and router bridge then know that
-        // it will need to create instances at build time
-        // let controllers = deps.controllers;
-
+        const deps = DependencyLoader.readBundles(bundle);
+        
         // register all services in the container
-        // from AcmeBundle/service/index.ts
-        let services = deps.services;
-
-        for (let className in services) {
-            let service = services[className];
-            let serviceId = this.createServiceName(className);
-            this.register(serviceId, service);
+        for (let serviceName in deps.services) {
+            let service = deps.services[serviceName];
+            container.registerService(serviceName, service);
         }
 
-        return this;
-    }
+        // for controllers, we don't register the but pass the metadata
+        // to the container. It will be the router bridge to read them and create routes
+        for (let className in deps.controllers) {
+            let controller = deps.controllers[className];
+            container.registerController(controller);
+        }
 
-    /**
-     * Set service name and prototype into the container
-     */
-    public register(name: string, target: Object): App
-    {
-        container.registerService(name, target);
         return this;
     }
 

@@ -1,5 +1,5 @@
 import { App, Console }                     from '@lyrics/core';
-import { Route, Controller, Inject }        from '@lyrics/routing';
+import { Route, Controller, Inject }        from '@lyrics/annotation';
 import { Request, Response, JsonResponse }  from '@lyrics/http';
 import { BaseController }                   from '@lyrics/controller';
 
@@ -15,20 +15,10 @@ export class DefaultController extends BaseController
     })
     indexAction()
     {
-        // function sleep(ms) {
-        //     var start = new Date().getTime(), expire = start + ms;
-        //     while (new Date().getTime() < expire) { }
-        //     return;
-        // }
-
-
-        // let user = new User();
-        // user.setName('Romain');
-
-        let name = 'Obama';
+        const name = 'Obama';
         return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
-
+    
     @Route('/post-demo', {
         type: 'POST',
         requirements: {

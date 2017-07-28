@@ -1,6 +1,6 @@
 import { ServiceInterface } from './service-interface';
 
-export class Service implements ServiceInterface {
+export class BaseService implements ServiceInterface {
     protected injected: any;
 
     constructor() {

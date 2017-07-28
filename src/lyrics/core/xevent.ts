@@ -9,10 +9,6 @@ class XEventSingleton {
     constructor() {
 
     }
-
-    test() {
-
-    }
 }
 
 export let XEvent = new XEventSingleton();

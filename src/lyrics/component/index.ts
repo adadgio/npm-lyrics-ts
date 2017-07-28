@@ -1,6 +1,5 @@
 /**
  * Lyrics namespace import
  */
-export * from './service';
-export * from './process.manager';
+export * from './base-service';
 export * from './service-interface';
