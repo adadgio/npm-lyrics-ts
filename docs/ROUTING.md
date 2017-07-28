@@ -72,7 +72,6 @@ export class DefaultController extends BaseController
     })
     postAction(request: Request)
     {
-        // console.log(req.body, req.headers);
         // ...some other logic to persist user object
         let person: Object = {
             id: request.getParam('id'),

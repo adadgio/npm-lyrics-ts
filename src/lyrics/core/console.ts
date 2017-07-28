@@ -49,7 +49,7 @@ class ConsoleSingleton
 
         fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
 
-        // @todo delete logs older tha 3 days
+        // @todo delete logs older 3 days
         // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
         // let oldFile = '?';
         // fs.unlinkSync(oldFile);
@@ -57,14 +57,6 @@ class ConsoleSingleton
 
     setEnv(env: string, traceDisabled: boolean = false) {
         this.env = env;
-
-        process.on('Error', function (error) {
-        //    console.log(error.stack);
-        });
-
-        // if (this.env === 'prod' || this.env === 'production' || traceDisabled === true) {
-        //     process.env.NODE_ENV === 'production';
-        // }
 
         return this;
     }
@@ -84,6 +76,10 @@ class ConsoleSingleton
         console.log('\x1b[31m%s\x1b[0m', text);
     }
 
+    info(text: string): void {
+        this.lite(text);
+    }
+
     warn(text: string): void {
         this.writeLog(text);
         console.log('\x1b[33m%s\x1b[0m', text);
@@ -94,7 +90,7 @@ class ConsoleSingleton
         console.log('\x1b[31m%s\x1b[0m', text);
         if (1 === quit) { process.exit(0); } // process will be reforked
     }
-    
+
     magenta(text: string): void {
         this.writeLog(text);
         console.log('\x1b[35m%s\x1b[0m', text);

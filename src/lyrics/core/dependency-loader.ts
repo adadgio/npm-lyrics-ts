@@ -3,13 +3,13 @@
  * controllers, services and models in each bundle
  * and let typescript analyse it
  */
-import * as fs      from 'fs';
-import * as pathes  from 'path';
-import { Console }  from '@lyrics/core';
+import * as fs          from 'fs';
+import * as pathes      from 'path';
+import { Console }      from '@lyrics/core';
+import { PathFinder }   from '@lyrics/core';
 
-class DependencyLoaderSingleton {
+class DependencyLoaderModule {
 
-    private basepath: string;
     private lookupDirs: Array<string>;
 
     constructor()
@@ -58,18 +58,30 @@ class DependencyLoaderSingleton {
     public require(path: string)
     {
         let deps: any = null;
+        let basename = pathes.basename(path);
+        let shortpath = path.replace('./../../', '');
 
-        // then try to load, failure here will be a logged error
+        // check if directory exists (../controler, models, service, blahblah)
+        // if the folder iteself does not exist there absolutely
+        // no need to look for an index ts file or trying to require or show a warning
+        let srcdir = `${PathFinder.getRootDir()}`;
+        let fullpath = `${srcdir}/${shortpath}`;
+        let dirExists = fs.existsSync(fullpath);
+
+        if (!dirExists) {
+            return deps;
+        }
+
         try {
             deps = require(path);
         } catch (e) {
-            let basename = pathes.basename(path);
-            let shortpath = path.replace('./../../', '');
-            Console.lite(`dependency-loader: No barrel found in ${shortpath} (index.ts for ${basename}) `);
+            // No barrel found in ${shortpath} (index.ts for ${basename})
+            Console.lite(`dependency-loader: Failed to require ${shortpath}, no barrel found or evaluating script failed`);
+            Console.error(e);
         }
-
+        
         return deps;
     }
 }
 
-export let DependencyLoader = new DependencyLoaderSingleton();
+export let DependencyLoader = new DependencyLoaderModule();

@@ -19,8 +19,8 @@ export class AcmeController extends BaseController
         // access full config or config value
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
-
-        return new Response('Acme demo');
+        
+        return new Response(`Acme demo ${item}`);
     }
 
     @Route('/other', { type: 'GET' })

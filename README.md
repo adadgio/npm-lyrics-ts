@@ -30,13 +30,19 @@ the [postman demo collection](./docs/lyrics.postman.json) file.
 - [Routing](./docs/ROUTING.md)
 - [Services and DI](./docs/SERVICES.md)
 
-
 ## Miscellaneous
 
 To see how your system performs, open `http://localhost:8182/_system/load` on your browser  (8182 beeing your default express port in your config `yml` file).
 
-## Tcs and build
+## Development and building for production
 
-Simply run `tcs` at the root directory to build full app inside the `dist/` folder.
+Working in development, you simply run `npm start`.
 
-Run `npm start` to watch changes and rebuild changed files.
+For building the project in plain NodeJS and running the app, do:
+
+```bash
+npm run build
+cd dist
+npm install
+node src/index --env=dev
+```

@@ -24,10 +24,10 @@ const _$_container = {
 export function debug() {
     // @log Service calls and ignition
     KernelListener.on(XEvent.CONTAINER_SERVICE_INITED, (args) => {
-        Console.lite(args);
+        // console.log(args);
     });
     KernelListener.on(XEvent.CONTAINER_SERVICE_REQUESTED, (args) => {
-        Console.lite(args);
+        // console.log(args);
     });
 }
 
@@ -73,9 +73,9 @@ export function addServiceInjection(name: string, injectionKey: string, property
 
     _$_container.injections[name].push({ key: injectionKey, property: propertyName });
 }
-export function initService(name: string) {
-    KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { info: `container: Service ${name} inited` });
-    KernelEvents.emit(`${XEvent.CONTAINER_SERVICE_REQUESTED}:${name}`, { info: `container: Service ${name} inited` });
+export function initService(name: string): void {
+    KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { info: `container.ts Service ${name} inited` });
+    KernelEvents.emit(`${XEvent.CONTAINER_SERVICE_REQUESTED}:${name}`, { info: `container.ts Service ${name} inited` });
 
     let serviceInstance = new _$_container.services[name].target();
     _$_container.services[name].instance = serviceInstance;
@@ -91,7 +91,7 @@ export function initService(name: string) {
                 // the param is aliased with "@", its a service we need to inject
 
                 if (unalias(dependecy.key) === name) {
-                    Console.exception(`container: Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
+                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependecy.key} into ${name}`);
                 }
 
                 let diInstance = getServiceInstance(unalias(dependecy.key));
@@ -105,7 +105,7 @@ export function initService(name: string) {
 
             } else {
                 // its nothing
-                Console.exception(`container: Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
+                Console.exception(`container.ts Unable to inject ${dependecy.key} into ${name}, reference must be a @service of %config.accessor%`);
             }
         }
     }
@@ -117,8 +117,16 @@ export function initService(name: string) {
     // run after init callback method if it exists (on 1st init only)
     if (typeof(_$_container.services[name].instance['onInit']) === 'function') {
         _$_container.services[name].instance['onInit']();
+        Console.info(`container.ts ${name} service inited using onInit()`);
+    } else {
+        Console.warn(`container.ts ${name}::onInit() method seems to be missing`);
     }
 }
+
+export function getRegisteredServices() {
+    return _$_container.services;
+}
+
 export function getServiceInstance(name: string) {
      if (!isServiceInited(name)) {
          initService(name);

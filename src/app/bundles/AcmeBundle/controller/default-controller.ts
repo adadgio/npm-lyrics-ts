@@ -15,6 +15,16 @@ export class DefaultController extends BaseController
     })
     indexAction()
     {
+        // function sleep(ms) {
+        //     var start = new Date().getTime(), expire = start + ms;
+        //     while (new Date().getTime() < expire) { }
+        //     return;
+        // }
+
+
+        // let user = new User();
+        // user.setName('Romain');
+
         let name = 'Obama';
         return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
@@ -32,7 +42,6 @@ export class DefaultController extends BaseController
     })
     createAction(request: Request)
     {
-        // console.log(req.body, req.headers);
         // ...some other logic to persist user object
         let person: Object = {
             id: request.getParam('id'),

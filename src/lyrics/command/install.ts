@@ -35,7 +35,7 @@ request(uri).pipe(fse.createWriteStream(tmpzip)).on('close', () => {
 
         fse.move(origin, dest, { overwrite: true }, (err) => {
             if (typeof(err) !== 'undefined') { console.log(err); return; }
-            
+
             fse.removeSync(origin);
             fse.unlinkSync(tmpzip);
             console.log('Ok. Bundle installed');

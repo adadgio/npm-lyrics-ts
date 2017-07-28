@@ -19,7 +19,8 @@
             "@lyrics/routing"    : ["src/lyrics/routing"],
             "@lyrics/routing/*"  : ["src/lyrics/routing/*"],
             "@lyrics/component"  : ["src/lyrics/component"],
-            "@lyrics/controller" : ["src/lyrics/controller"]
+            "@lyrics/controller" : ["src/lyrics/controller"],
+            "@lyrics/annotation" : ["src/lyrics/annotation"]
         },
         "rootDir": "."
     },

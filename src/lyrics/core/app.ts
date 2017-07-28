@@ -2,15 +2,16 @@
  * Main app component wrapper
  * Handle env variables, express and loads routing
  */
-import * as fs       from 'fs';
-import * as http     from 'http';
-import * as yaml     from 'yamljs';
-import * as express  from 'express';
-import * as parser   from 'body-parser';
+import * as fs          from 'fs';
+import * as http        from 'http';
+import * as yaml        from 'yamljs';
+import * as express     from 'express';
+import * as parser      from 'body-parser';
+import * as child       from 'child_process';
 import * as container                       from '@lyrics/core/container';
 import { RouterBridge, RouterUtils }        from '@lyrics/routing';
 import { Console, Argument, Configuration } from '@lyrics/core';
-import { DependencyLoader }                 from '@lyrics/core';
+import { PathFinder, DependencyLoader }     from '@lyrics/core';
 
 interface ExpressError {
     status?: number;
@@ -28,7 +29,8 @@ export class App {
 
     private webroot: string;
     private express: express.Application;
-    private services: Object = {};
+    // private services: Object = {};
+    private preloadedServices: Array<string> = [];
     private controllers: any;
 
     constructor()
@@ -48,7 +50,7 @@ export class App {
 
         // save configuration parameters into app
         // and basic default app configuration vars
-        this.root = process.env.PWD + '/src';
+        this.root = PathFinder.getRootDir(); // path to the src dir
         this.xdebug = false;
         this.config = new Configuration();
         this.config.inject(yamlConfig);
@@ -58,6 +60,21 @@ export class App {
     public run(): void
     {
         this.onDebugAll();
+
+        // preload services if applicable note that services are never inited twice if
+        // properly done, that is using the container method (container::initService())
+        for (let serviceId in container.getRegisteredServices()) {
+            if (this.preloadedServices.indexOf(serviceId) > -1) {
+                container.initService(serviceId);
+            }
+
+            // launch services defined as sub processes (@Process decorator)
+            let serviceInstance = container.getServiceInstance(serviceId);
+            let isDefinedAsProcess = Reflect.getMetadata('process', serviceInstance.constructor);
+            if (isDefinedAsProcess) {
+                // nothing to do my friend
+            }
+        }
 
         // prepare express and middlewares
         this.express = express();
@@ -165,10 +182,6 @@ export class App {
             this.register(serviceId, service);
         }
 
-        // nothing to to with the models now that typescript
-        // has read them (as soon as dependency loader required them)
-        // let models = deps.models
-
         return this;
     }
 
@@ -254,5 +267,11 @@ export class App {
     public getConfigValue(name: string)
     {
         return this.config.get(name);
+    }
+
+    public preloadServices(names: Array<string>)
+    {
+        this.preloadedServices = names;
+        return this;
     }
 }

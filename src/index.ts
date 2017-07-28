@@ -2,9 +2,7 @@
  * Index
  */
 'use strict';
-// use npm module alias to use ts paths mapping (tsconfig.json)
-// and correct nodejs alias resolver (package.json)
-require('module-alias/register');
+require('./lyrics/register');
 
 let hrstart = process.hrtime();
 import { App, Cluster, Console } from '@lyrics/core';
@@ -19,11 +17,16 @@ clustering.start(f => {
 
     app
         .debug(true)
-        .import('SystemBundle')
         .import('AcmeBundle')
         .setWebroot(`${__dirname}/app/public`)
     ;
 
+    // some services you might want to ini here at start up
+    // and not on every request, do it here
+    app.preloadServices([]);
+
+    // at last and only at last
+    // run your app
     app.run();
 
     // show total boot time for debug purposes
