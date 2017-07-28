@@ -1,7 +1,8 @@
-import { App, Console }                     from '@lyrics/core';
-import { BaseController }                   from '@lyrics/controller';
-import { Service, Route, Controller, Inject }        from '@lyrics/annotation';
-import { Request, Response, JsonResponse }  from '@lyrics/http';
+import { App, Console }                         from '@lyrics/core';
+import { BaseController }                       from '@lyrics/controller';
+import { Service, Route, Controller, Inject }   from '@lyrics/annotation';
+import { Request, Response, JsonResponse }      from '@lyrics/http';
+import { EventDispatcher }                      from '@lyrics/event';
 
 @Controller('/acme')
 export class AcmeController extends BaseController
@@ -19,6 +20,8 @@ export class AcmeController extends BaseController
         // access full config or config value
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
+        
+        EventDispatcher.emit('test', {qsd: "3"});
 
         return new Response(`Acme demo ${item}`);
     }

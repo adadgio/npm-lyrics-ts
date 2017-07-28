@@ -3,6 +3,8 @@
  */
 import { Service, Inject }  from '@lyrics/annotation';
 import { BaseService }      from '@lyrics/component';
+import { Listen }          from '@lyrics/annotation';
+import { EventDispatcher }  from '@lyrics/event';
 
 @Service('test.service')
 @Inject([
@@ -16,7 +18,8 @@ export class TestService extends BaseService
      * need this for proper DI injection, but service
      * deps are not injected yet ("this.injected" is empty).
      */
-    constructor() {
+    constructor()
+    {
         super();
     }
 
@@ -25,11 +28,20 @@ export class TestService extends BaseService
      * annotations above were successfuly injected by the
      * container ("this.injected" is not empty).
      */
-    onInit() {
+    onInit()
+    {
 
     }
+    
+    @Listen('test')
+    test(e)
+    {
+        console.log('Just received an event !', e);
+        this.greet('Hey!, just received event!');
+    }
 
-    public greet(name: string) {
+    public greet(name: string)
+    {
         let bye = this.injected.other.sayBye();
         let info = `${name} (${this.injected.age} years old)`;
 

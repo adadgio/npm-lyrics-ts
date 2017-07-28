@@ -13,6 +13,7 @@
         "baseUrl": ".",
         "paths": {
             "@lyrics/core"       : ["src/lyrics/core"],
+            "@lyrics/event"      : ["src/lyrics/event"],
             "@lyrics/core/*"     : ["src/lyrics/core/*"],
             "@lyrics/http"       : ["src/lyrics/http"],
             "@lyrics/utils"      : ["src/lyrics/utils"],
