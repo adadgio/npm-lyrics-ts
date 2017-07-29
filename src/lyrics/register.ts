@@ -3,6 +3,7 @@
 // require('module-alias/register');
 const moduleAlias = require('module-alias');
 moduleAlias.addAlias('@lyrics/core', __dirname + '/core');
+moduleAlias.addAlias('@lyrics/event', __dirname + '/event');
 moduleAlias.addAlias('@lyrics/http', __dirname + '/http');
 moduleAlias.addAlias('@lyrics/utils', __dirname + '/utils');
 moduleAlias.addAlias('@lyrics/routing', __dirname + '/routing');

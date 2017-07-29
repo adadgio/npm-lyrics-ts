@@ -19,6 +19,5 @@ export function Service(name: string, opts: ServiceDefinition = DefaultServiceDe
         const metadata = Reflect.getMetadata('serviceMetadata', target) || new ServiceMeta(className, name, target);
 
         Reflect.defineMetadata('serviceMetadata', metadata, target);
-        return target;
     };
 }

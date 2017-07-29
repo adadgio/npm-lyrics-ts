@@ -1,7 +1,8 @@
-import { App, Console }                     from '@lyrics/core';
-import { BaseController }                   from '@lyrics/controller';
-import { Service, Route, Controller, Inject }        from '@lyrics/annotation';
-import { Request, Response, JsonResponse }  from '@lyrics/http';
+import { App, Console }                         from '@lyrics/core';
+import { BaseController }                       from '@lyrics/controller';
+import { Service, Route, Controller, Inject }   from '@lyrics/annotation';
+import { Request, Response, JsonResponse }      from '@lyrics/http';
+import { EventDispatcher }                      from '@lyrics/event';
 
 @Controller('/acme')
 export class AcmeController extends BaseController
@@ -10,22 +11,25 @@ export class AcmeController extends BaseController
         super(app);
     }
 
-    @Route('/index', { type: 'GET' })
+    @Route('/index', {type: 'GET'})
     indexAction(request: Request)
     {
         // access a service instance
-        let test = this.get('test.service');
+        let testService = this.get('test.service');
 
-        // access full config or config value
+        // access config values
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
 
-        return new Response(`Acme demo ${item}`);
+        EventDispatcher.emit('test.event', {qsd: "3"});
+
+        const name = 'Bilbo Baggins';
+        return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
     }
 
-    @Route('/other', { type: 'GET' })
+    @Route('/text', {type: 'GET'})
     otherAction()
     {
-        return new JsonResponse({ message: 'Acme Json' });
+        return new Response(`Acme response text demo.`);
     }
 }

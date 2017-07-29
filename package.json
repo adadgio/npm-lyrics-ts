@@ -51,6 +51,7 @@
   "_moduleAliases": {
     "@root": ".",
     "@lyrics/core": "src/lyrics/core",
+    "@lyrics/event": "src/lyrics/event",
     "@lyrics/http": "src/lyrics/http",
     "@lyrics/utils": "src/lyrics/utils",
     "@lyrics/routing": "src/lyrics/routing",

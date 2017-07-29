@@ -54,16 +54,16 @@ class RouterBridgeSingleton {
 
                     KernelEvents.emit(XEvent.ROUTER_REQUEST, `router-bridge.ts REQ ${path} -x ${ActionTypes.GET}`);
 
-                    let info: any;
+                    let debug: any;
 
                     let duration = RouterUtils.execTime(() => {
                         let args = this.getActionMethodReflectedArgs(req, metadata);
                         let result = methodAction.apply(ctrlInstance, args);
 
-                        info = this.sendResponse(result, res);
+                        debug = this.sendResponse(result, res);
                     });
 
-                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.GET} ${info.restype} (in ${duration})`);
+                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.GET} ${debug.contentType} (in ${duration})`);
                 });
 
             break;
@@ -71,7 +71,7 @@ class RouterBridgeSingleton {
                 app.router.post(path, (req, res, next) => {
                     KernelEvents.emit(XEvent.ROUTER_REQUEST, `router-bridge.ts REQ ${path} -x ${ActionTypes.POST}`);
 
-                    let info: any;
+                    let debug: any;
                     let reqErrors = RouterUtils.checkRequirements(req, metadata);
 
                     let duration = RouterUtils.execTime(() => {
@@ -79,13 +79,13 @@ class RouterBridgeSingleton {
                         let result = methodAction.apply(ctrlInstance, args);
 
                         if (reqErrors.length === 0) {
-                            info = this.sendResponse(result, res);
+                            debug = this.sendResponse(result, res);
                         } else {
-                            info = this.sendErrorResponse(result, res, reqErrors);
+                            debug = this.sendErrorResponse(result, res, reqErrors);
                         }
                     });
 
-                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.POST} ${info.restype} (in ${duration})`);
+                    KernelEvents.emit(XEvent.ROUTER_RESPONSE, `router-bridge.ts RSP ${path} -x ${ActionTypes.POST} ${debug.contentType} (in ${duration})`);
                 });
             break;
             default:
@@ -96,43 +96,46 @@ class RouterBridgeSingleton {
         this.addDebuggedRoute(path, metadata);
     }
 
-    private sendResponse(result: any, res: express.Response) {
-        let info = { restype: null };
+    private sendResponse(respResult: any, res: express.Response) {
+        let debug = { contentType: null };
 
-        if (result instanceof Response) {
-            info.restype = 'text/plain';
-            res.send(result.getContent());
+        if (respResult instanceof Response) {
+            debug.contentType = 'text/plain';
+            res.statusCode = respResult.getCode();
+            res.send(respResult.getContent());
 
-        } else if (result instanceof JsonResponse) {
-            info.restype = 'application/json';
-            res.json(result.getJsonContent());
+        } else if (respResult instanceof JsonResponse) {
+            debug.contentType = 'application/json';
+            res.statusCode = respResult.getCode();
+            res.json(respResult.getJsonContent());
 
-        } else if (result instanceof String || typeof result === 'number') {
-            info.restype = 'text/plain';
-            res.send(result.toString());
+        } else if (respResult instanceof String || typeof respResult === 'number') {
+            debug.contentType = 'text/plain';
+            res.statusCode = 200;
+            res.send(respResult.toString());
 
         } else {
-            throw Error('Controller response must be a string or an instance of Response or JsonResponse');
+            throw Error('router-bridge.ts controller response must be a string or an instance of Response or JsonResponse');
         }
 
-        return info;
+        return debug;
     }
 
     private sendErrorResponse(result: any, res: express.Response, errors: any) {
-        let info = { restype: null };
+        let debug = { contentType: null };
 
         if (result instanceof Response) {
-            info.restype = 'text/html';
+            debug.contentType = 'text/html';
             res.statusCode = 400;
             res.send(`invalid request parameters:\n${errors.toString()}`);
 
         } else if (result instanceof JsonResponse) {
-            info.restype = 'application/json';
+            debug.contentType = 'application/json';
             res.statusCode = 400;
             res.json({ type: 'error', message: `invalid request parameters`, details: errors });
 
         } else if (result instanceof String || typeof result === 'number') {
-            info.restype = 'text/plain';
+            debug.contentType = 'text/plain';
             res.statusCode = 400;
             res.send(`invalid request parameters:\n${errors.toString()}`);
 
@@ -140,7 +143,7 @@ class RouterBridgeSingleton {
             throw Error('Controller response must be a string or an instance of Response or JsonResponse');
         }
 
-        return info;
+        return debug;
     }
 
     private getActionMethodReflectedArgs(req: express.Request, metadata: RouteMetadata) {

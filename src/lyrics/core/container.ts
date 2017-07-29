@@ -5,9 +5,11 @@
  * like @Route(...) and @Controller()
  * Inspired by https://github.com/pleerock/routing-controllers
  */
-import { Console, KernelEvents, KernelListener, XEvent } from '@lyrics/core';
-import { ControllerMeta }   from '@lyrics/annotation';
-import { RouteMetadata }    from '@lyrics/routing/metadata';
+import { Console }                              from '@lyrics/core';
+import { KernelEvents, KernelListener, XEvent } from '@lyrics/core';
+import { EventDispatcher }                      from '@lyrics/event';
+import { ControllerMeta }                       from '@lyrics/annotation';
+import { RouteMetadata }                        from '@lyrics/routing/metadata';
 
 /**
  * This variable contains global annotations
@@ -25,10 +27,10 @@ const _$_container = {
 export function debug() {
     // @log Service calls and ignition
     KernelListener.on(XEvent.CONTAINER_SERVICE_INITED, (args) => {
-        // console.log(args);
+
     });
     KernelListener.on(XEvent.CONTAINER_SERVICE_REQUESTED, (args) => {
-        // console.log(args);
+
     });
 }
 
@@ -89,7 +91,6 @@ export function initService(name: string): void {
         for (let dependency of _$_container.injections[selfKlass]) {
             // skitp any injections into the controllers
 
-
             if (isAliased(dependency.key)) {
                 // the param is aliased with "@", its a service we need to inject
 
@@ -147,7 +148,7 @@ export function getServiceIdByClassName(className: string) {
             return serviceId;
         }
     }
-    return false;
+    return null;
 }
 
 export function getServiceDefinitionByClassName(className: string) {
@@ -190,6 +191,15 @@ export function addControllerMeta(metadata: ControllerMeta) {
 }
 export function getContollerMeta(key: any) {
     return _$_container.controllers[key];
+}
+
+/**
+ * Event dispatcher startup(s)
+ */
+export function startEventDispatcherListeners() {
+    // event dispatcher logs are magenta
+    Console.magenta(`container.ts event dispatcher listeners attached`);
+    EventDispatcher.startListening();
 }
 
 function unalias(string: string) {
