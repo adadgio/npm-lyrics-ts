@@ -46,6 +46,7 @@
     "moment": "^2.18.1",
     "reflect-metadata": "^0.1.9",
     "request": "^2.81.0",
+    "winston": "^2.3.1",
     "yamljs": "^0.2.8"
   },
   "_moduleAliases": {

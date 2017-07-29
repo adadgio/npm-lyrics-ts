@@ -26,22 +26,27 @@ class DependencyLoaderModule {
      */
     public readBundles(bundle: string)
     {
+        const srcDir = PathFinder.getRootDir();
+
         let controllers = {};
         let services = {};
 
+        // Console.info(`dependency-loader.ts adding default /_debug controller...`);
+        // controllers['DebugController'] = pathes.normalize(`${srcDir}/lyrics/controller`);
+
         Console.info(`dependency-loader.ts reading bundles...`);
+
         // the job here is basically to  read all the files in
         // the bundle recursively and look for annotations
-
-        const srcDir = PathFinder.getRootDir();
         const bundleDir = pathes.normalize(`${srcDir}/app/bundles/${bundle}`);
 
         const files = klawSync(bundleDir, { nodir: true });
-
+        
         for (let file of files) {
             const ext = pathes.extname(file.path);
 
             if (['.ts', '.tsx', '.js'].indexOf(ext) === -1) { continue; }
+            if (pathes.basename(file.path) === 'index.ts') { continue; }
             // we just need to do that so that typescript reads the file
             // instances will be created and passed to container and
             // deleted here afterwards
@@ -59,7 +64,7 @@ class DependencyLoaderModule {
 
                 const serviceName = serviceMetadata.getName();
                 services[serviceName] = finalClass;
-                
+
             } else if (controllerMetadata) {
 
                 controllers[nameOfClass] = finalClass;

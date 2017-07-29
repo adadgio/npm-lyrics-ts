@@ -38,7 +38,9 @@ export class App {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
-        Console.setEnv(this.env, true); // for cleaner debug logs
+        
+        // 2nd param is winston loggin level error|warn|info|verbose|debug|silly
+        Console.setEnv(this.env, 'debug');
 
         // then load the correct config environment file
         let confpath = __dirname + '/../../app/config/config.'+ this.env +'.yml';
