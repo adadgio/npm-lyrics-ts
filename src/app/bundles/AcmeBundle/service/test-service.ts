@@ -3,12 +3,12 @@
  */
 import { Service, Inject }  from '@lyrics/annotation';
 import { BaseService }      from '@lyrics/component';
-import { Listen }          from '@lyrics/annotation';
+import { Listen }           from '@lyrics/annotation';
 import { EventDispatcher }  from '@lyrics/event';
 
 @Service('test.service')
 @Inject([
-    { age: '%my_stuff.age%' },      // value from config.*.yml
+    { age: '%my_stuff.age%' },
     { other: '@other.service' },
 ])
 export class TestService extends BaseService
@@ -32,19 +32,22 @@ export class TestService extends BaseService
     {
 
     }
-    
-    @Listen('test')
-    test(e)
+
+    @Listen('test.event')
+    test(e: any)
     {
-        console.log('Just received an event !', e);
-        this.greet('Hey!, just received event!');
+        const event = e;
+        this.doSomethingWithAge();
+    }
+    
+    doSomethingWithAge()
+    {
+        console.log(`Did something with age: ${this.injected.age}`);
     }
 
-    public greet(name: string)
+    greet(txt: string)
     {
-        let bye = this.injected.other.sayBye();
-        let info = `${name} (${this.injected.age} years old)`;
-
-        return `Greetings ${info}! Also sorry but ${bye}`;
+        // let bye = this.injected.other.sayBye();
+        return `Greetings Gandalf, ${txt}`;
     }
 }

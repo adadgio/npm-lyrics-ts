@@ -83,6 +83,10 @@ export class App {
 
         // open ports and listen
         this.server.listen(this.config.get('framework.express.port'));
+
+        // also bind  event dispatcher listeners (actually just delegate)
+        // to the container who will just call dispatcher "start Listening method"
+        container.startEventDispatcherListeners();
     }
 
     private middleware(): void
@@ -151,7 +155,7 @@ export class App {
     public import(bundle: string): App
     {
         const deps = DependencyLoader.readBundles(bundle);
-        
+
         // register all services in the container
         for (let serviceName in deps.services) {
             let service = deps.services[serviceName];

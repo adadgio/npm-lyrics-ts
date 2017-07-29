@@ -3,23 +3,22 @@ import { Route, Controller, Inject }        from '@lyrics/annotation';
 import { Request, Response, JsonResponse }  from '@lyrics/http';
 import { BaseController }                   from '@lyrics/controller';
 
-@Controller('/default')
-export class DefaultController extends BaseController
+@Controller('/rest')
+export class RestController extends BaseController
 {
     constructor(app: App) {
         super(app);
     }
 
-    @Route('/get-demo', {
+    @Route('/get', {
         type: 'GET'
     })
     indexAction()
     {
-        const name = 'Obama';
-        return this.renderHtml('<p>Hello {{name}}</p>', { name: name });
+        return new JsonResponse({ message: 'REST get route action.' }, 404);
     }
-    
-    @Route('/post-demo', {
+
+    @Route('/post', {
         type: 'POST',
         requirements: {
             body: {
@@ -40,6 +39,6 @@ export class DefaultController extends BaseController
         };
 
         // return a valid response object
-        return new JsonResponse({ message: 'user successfuly created', person: person });
+        return new JsonResponse({ message: 'REST post route action.', person: person });
     }
 }

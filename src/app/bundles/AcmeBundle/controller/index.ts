@@ -1,2 +1,2 @@
-export { AcmeController }    from './acme-controller';
-export { DefaultController } from './default-controller';
+export { AcmeController }   from './acme-controller';
+export { RestController }   from './rest-controller';

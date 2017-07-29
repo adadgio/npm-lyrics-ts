@@ -10,18 +10,12 @@ export function Listen(eventName: string): any {
     return function (target: Function, methodName: string, descriptor: TypedPropertyDescriptor<any>) {
         // save a reference to the original method
         let originalMethod = descriptor.value;
-
-        // Console.warn(`listen.ts listening to ${eventName}`);
-        EventDispatcher.on(eventName, (e) => {
-            originalMethod.apply(target, [e]);
-        });
         
-        // descriptor.value = function (...args: any[]) {
-        //     let result = originalMethod.apply(target, args);
-        //     return result;
-        // };
-
-        // optional, code works without this
-        // return descriptor;
+        // there is a problem because if the annotation
+        // is on a serivice its not yet instantiated at this point
+        // so we need to register a listener first and it will be
+        // attached a little bit later by ?? who ?
+        const fn: Function = target[methodName];
+        EventDispatcher.registerCustomListener(eventName, fn, target);
     }
 }

@@ -9,14 +9,14 @@ import { InjectMetadata }   from '@lyrics/routing/metadata';
 export function Inject(dependencies: Array<Object>) {
 
     return function (target: any, decoratedPropertyName? : string): void {
-        const original = target;
-        let targetType: Function;
-
-        if (typeof target === 'function' && decoratedPropertyName === undefined) {
-            targetType = target;
-        } else {
-            targetType = target.constructor;
-        }
+        // const original = target;
+        // let targetType: Function;
+        //
+        // if (typeof target === 'function' && decoratedPropertyName === undefined) {
+        //     targetType = target;
+        // } else {
+        //     targetType = target.constructor;
+        // }
 
         let serviceClassName = target.prototype.constructor.name;
 
@@ -28,7 +28,5 @@ export function Inject(dependencies: Array<Object>) {
                 container.addServiceInjection(serviceClassName, injectionKey, propertyName);
             }
         }
-        
-        return original;
     };
 }

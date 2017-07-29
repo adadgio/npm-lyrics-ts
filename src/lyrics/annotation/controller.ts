@@ -7,10 +7,11 @@ import { ControllerMeta }   from '@lyrics/annotation';
 export function Controller(route: string): any {
 
     return function (target: Function) {
+        const original = target;
+
         const className = target.prototype.constructor.name;
         const metadata = Reflect.getMetadata('controllerMetadata', target) || new ControllerMeta(className, route, target);
         
         Reflect.defineMetadata('controllerMetadata', metadata, target);
-        return target;
    };
 }
