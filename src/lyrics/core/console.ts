@@ -54,7 +54,7 @@ class ConsoleSingleton
         const date = moment().format('Y-MM-DD');
         const datetime = moment().format('Y-MM-DD HH-mm-s');
         const logfile = `${this.env}-${date}-debug.log`;
-        
+
         this.logger = new (winston.Logger)({
             transports: [
                 // colorize the output to the console
@@ -63,21 +63,16 @@ class ConsoleSingleton
                     colorize: true,
                     level: 'info'
                 }),
-                new (winston.transports.File)({
-                    filename: `${logDir}/${logfile}`,
-                    timestamp: tsFormat,
-                    level: this.env === 'dev' ? 'debug' : 'info'
-                })
+                // new (winston.transports.File)({
+                //     filename: `${logDir}/${logfile}`,
+                //     timestamp: tsFormat,
+                //     level: this.env === 'dev' ? 'debug' : 'info'
+                // })
             ]
         });
     }
 
     writeLog(text: string) {
-        // let date = moment().format('Y-MM-DD');
-        // let datetime = moment().format('Y-MM-DD HH-mm-s');
-        // let filepath = process.env.PWD + `/var/logs/${this.env}-${date}-debug.log`;
-
-        // fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
         this.logger.debug(text);
     }
 

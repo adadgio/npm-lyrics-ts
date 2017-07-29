@@ -46,3 +46,10 @@ cd dist
 npm install
 node src/index --env=dev
 ```
+
+
+## Load tests
+
+Install Artillery.js and run.
+
+`artillery quick --duration 60 --rate 10 -n 20 http://localhost:8182/rest/get`

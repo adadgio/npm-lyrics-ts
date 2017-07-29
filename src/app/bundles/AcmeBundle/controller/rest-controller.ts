@@ -15,9 +15,9 @@ export class RestController extends BaseController
     })
     indexAction()
     {
-        return new JsonResponse({ message: 'REST get route action.' }, 404);
+        return new JsonResponse({ message: 'REST get route action.' }, 200);
     }
-
+    
     @Route('/post', {
         type: 'POST',
         requirements: {
