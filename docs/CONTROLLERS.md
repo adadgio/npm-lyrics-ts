@@ -84,3 +84,7 @@ indexAction()
     return new Response(html);
 }
 ```
+
+[&laquo; Config](./../CONFIG.md)
+
+[Events &raquo;](./EVENTS.md)
