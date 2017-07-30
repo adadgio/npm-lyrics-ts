@@ -4,6 +4,7 @@
  */
 import 'reflect-metadata';
 import * as express                         from 'express';
+import * as container                       from '@lyrics/core/container';
 import { App, Console }                     from '@lyrics/core';
 import { RouteMetadata, ActionTypes }       from '@lyrics/routing/metadata';
 import { Request, Response, JsonResponse }  from '@lyrics/http';
@@ -33,12 +34,18 @@ class RouterBridgeUtilsSingleton {
         return string.replace(/^\/|\/$/g, '');
     }
 
-    public checkRequirements(req: express.Request, metadata: RouteMetadata): Array<string> {
+    public checkRequirements(req: express.Request, metadata: RouteMetadata): Array<string>
+    {
         const BODY = 'body';
         const HEADERS = 'headers';
 
         let errors = [],
             requirements = metadata.getRequirements();
+
+        // if no requirements
+        if (requirements == null) {
+            return errors;
+        }
 
         if (typeof requirements[BODY] === 'object') {
             for (let prop in requirements[BODY]) {
@@ -65,6 +72,37 @@ class RouterBridgeUtilsSingleton {
         }
 
         return errors;
+    }
+
+    public checkSecurity(req: express.Request, metadata: RouteMetadata): Array<string>
+    {
+        let errors = [],
+            firewallServiceId = metadata.getFirewallServiceId();
+
+        // if metadata did not specify a security service id, skip security
+        if (null === firewallServiceId) {
+            return [];
+        }
+
+        const firewallService: any = container.getServiceInstance('security.service');
+        const securityCheckResult = firewallService.checkCrendentials(req);
+
+        if (securityCheckResult === true || typeof securityCheckResult === 'undefined') {
+            return [];
+        } else {
+            const errors = securityCheckResult;
+
+            // let errors always be an array
+            if (errors instanceof Array) {
+                return errors;
+            } else if (typeof errors === 'string') {
+                return [errors];
+            } else if (errors === false) {
+                return ['router-bridge-utils.ts unauthorized'];
+            } else {
+                throw Error(`router-bridge-utils.ts checkSecurity() error return type must be false|string|array`);
+            }
+        }
     }
 
     public isJsonRequest(req: express.Request) {

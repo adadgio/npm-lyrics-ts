@@ -1,0 +1,14 @@
+config:
+  target: "http://localhost:8182"
+  phases:
+    - duration: 120
+      arrivalRate: 5
+      rampTo: 50
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+
+scenarios:
+  - flow:
+    - get:
+        url: "/rest/get"

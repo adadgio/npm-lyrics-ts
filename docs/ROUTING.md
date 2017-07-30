@@ -85,6 +85,6 @@ export class DefaultController extends BaseController
 }
 ```
 
-[&laquo; Controllers](./../CONTROLLERS.md)
+[&laquo; Events](./../EVENTS.md)
 
-[Services &raquo;](./SERVICES.md)
+[Security &raquo;](./SECURITY.md)

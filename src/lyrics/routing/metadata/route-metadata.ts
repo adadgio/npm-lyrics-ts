@@ -8,6 +8,7 @@ export class RouteMetadata {
     methodName: string;
     options: Object;
     type: 'GET'|'POST'|'PUT'|'DELETE';
+    firewall: string;
     descriptor: PropertyDescriptor;
     reflectionParams: any;
 
@@ -36,9 +37,13 @@ export class RouteMetadata {
     getType() {
         return this.type;
     }
-    
+
     getRequirements() {
         return (typeof this.options['requirements'] === 'object') ? this.options['requirements'] : null;
+    }
+    
+    getFirewallServiceId() {
+        return (typeof this.options['firewall'] === 'string') ? this.options['firewall'] : null;
     }
 
     getParentClassName() {

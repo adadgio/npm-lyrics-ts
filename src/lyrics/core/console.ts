@@ -6,6 +6,7 @@
 import * as fs      from 'fs';
 import * as path    from 'path';
 import * as moment  from 'moment';
+import * as winston from 'winston';
 
 class ConsoleSingleton
 {
@@ -37,28 +38,56 @@ class ConsoleSingleton
     BgWhite     = '\x1b[47m';
 
     private env: string;
+    private logger: any; // the winston logger
 
     constructor() {
         this.env = 'dev';
+
+        // create the logs directory for winston
+        // if the directory does not exist
+        const logDir =  `${process.env.PWD}/var/logs/`;
+        if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir);
+        }
+
+        const tsFormat = () => (new Date()).toLocaleTimeString();
+        const date = moment().format('Y-MM-DD');
+        const datetime = moment().format('Y-MM-DD HH-mm-s');
+        const logfile = `${this.env}-${date}-debug.log`;
+
+        this.logger = new (winston.Logger)({
+            transports: [
+                // colorize the output to the console
+                new (winston.transports.Console)({
+                    timestamp: tsFormat,
+                    colorize: true,
+                    level: 'info'
+                }),
+                // new (winston.transports.File)({
+                //     filename: `${logDir}/${logfile}`,
+                //     timestamp: tsFormat,
+                //     level: this.env === 'dev' ? 'debug' : 'info'
+                // })
+            ]
+        });
     }
 
     writeLog(text: string) {
-        let date = moment().format('Y-MM-DD');
-        let datetime = moment().format('Y-MM-DD HH-mm-s');
-        let filepath = process.env.PWD + `/var/logs/${this.env}-${date}-debug.log`;
-
-        fs.appendFileSync(filepath, `[${datetime}]\n${text}\n`);
-
-        // @todo delete logs older 3 days
-        // let prevDate = moment().subtract(3,'d').format('YYYY-MM-DD');
-        // let oldFile = '?';
-        // fs.unlinkSync(oldFile);
+        this.logger.debug(text);
     }
 
-    setEnv(env: string, traceDisabled: boolean = false) {
+    setEnv(env: string, winstonDebugLevel: 'error'|'warn'|'info'|'verbose'|'debug'|'silly' = 'debug') {
         this.env = env;
 
+        // configure winston logger level
+        this.logger.level = winstonDebugLevel;
+
         return this;
+    }
+
+    configureWinstonLogger()
+    {
+
     }
 
     log(text: string): void {
@@ -95,7 +124,7 @@ class ConsoleSingleton
         this.writeLog(text);
         console.log('\x1b[35m%s\x1b[0m', text);
     }
-    
+
     comment(text: string): void {
         this.writeLog(text);
         console.log('\x1b[35m%s\x1b[0m', text);
