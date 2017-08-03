@@ -54,7 +54,7 @@ Render text or html:
 })
 indexAction()
 {
-    // render straigh html
+    // render html
     return this.renderHtml('<p>Hello {{name}}</p>');
 }
 ```
@@ -84,7 +84,3 @@ indexAction()
     return new Response(html);
 }
 ```
-
-[&laquo; Config](./../CONFIG.md)
-
-[Events &raquo;](./EVENTS.md)

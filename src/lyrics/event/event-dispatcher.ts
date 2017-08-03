@@ -1,5 +1,6 @@
-import * as events from 'events';
-import * as container from '@lyrics/core/container';
+import * as events      from 'events';
+import * as container   from '@lyrics/core/container';
+import { Console }      from '@lyrics/core';
 
 function getFnName(fn) {
     let ret = fn.toString();
@@ -29,7 +30,7 @@ class EventDispatcherSingleton extends events.EventEmitter
             const className = listener.target.constructor.name;
             const serviceId = container.getServiceIdByClassName(className);
             const serviceInstance = container.getServiceInstance(serviceId);
-            
+
             this.on(listener.eventName, (e) => {
                 // excute the method withing the correct instance
                 // so that "this" reference is not lost!
@@ -37,15 +38,6 @@ class EventDispatcherSingleton extends events.EventEmitter
             });
         }
     }
-
-    // addEventListener()
-    // {
-    //
-    // }
-    // removeEventListener()
-    // {
-    //
-    // }
 
     registerCustomListener(eventName: string, fn: Function, target: any)
     {

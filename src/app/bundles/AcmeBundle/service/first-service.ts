@@ -3,12 +3,13 @@
  */
  import { Service, Inject } from '@lyrics/annotation';
  import { BaseService }     from '@lyrics/component';
+ import { SecondService }   from './second-service';
 
-@Service('other.service')
+@Service('first.service')
 export class OtherService extends BaseService
 {
-    @Inject('%my_stuff.age%')
-    test: number = null;
+    @Inject('@second.service')
+    secondService: SecondService;
 
     constructor()
     {
@@ -20,7 +21,7 @@ export class OtherService extends BaseService
 
     }
 
-    public sayBye()
+    sayBye()
     {
         return `Bye bye!`;
     }

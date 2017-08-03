@@ -15,7 +15,8 @@ import { RouteMetadata }                        from '@lyrics/routing/metadata';
  * This variable contains global annotations
  * read from controllers classes and methods
  */
-let app: any, injections: Object;
+let app: any;
+
 const _$_container = {
     app: app,
     services: {},
@@ -66,57 +67,49 @@ export function isServiceRegistered(name) {
     return (typeof _$_container.services[name] === 'object');
 }
 export function registerService(name: string, target?: Object) {
-    Console.comment(`container.ts Registering service ${name}`);
+    Console.comment(`container.ts Registered service [${name}]`);
+
+    if (isServiceRegistered(name)) {
+        Console.error(`container.ts Cannot register the same service twice [${name}]`);
+        return;
+    }
+
     let className = (undefined === target) ? null : target['name'];
      _$_container.services[name] = { target: target, inited: false, instance: null, className: className };
 }
-export function addServiceInjection(name: string, target: any, injectionKey: string, propertyName: string) {
-    if (typeof _$_container.injections[name] === 'undefined') {
-        _$_container.injections[name] = [];
+
+export function addServiceInjection(target: any, injectionKey: string, propertyKey: string)
+{
+    const serviceClassName = target.constructor.name;
+
+    if (typeof _$_container.injections[serviceClassName] === 'undefined') {
+        _$_container.injections[serviceClassName] = [];
     }
 
-    _$_container.injections[name].push({ target: target, key: injectionKey, property: propertyName });
+    _$_container.injections[serviceClassName].push({ target: target, injectionKey: injectionKey, property: propertyKey });
 }
+
 export function initService(name: string): void {
     KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { info: `container.ts Service ${name} inited` });
     KernelEvents.emit(`${XEvent.CONTAINER_SERVICE_REQUESTED}:${name}`, { info: `container.ts Service ${name} inited` });
 
-    let serviceInstance = new _$_container.services[name].target();
+    const serviceClassName = _$_container.services[name].className;
+    const serviceInstance = new _$_container.services[name].target();
     _$_container.services[name].instance = serviceInstance;
+    Console.info(`container.ts ${name} service inited`);
 
-    let diArgs = {},
-        selfKlass = _$_container.services[name].className;
+    // look for injections !
+    if (typeof _$_container.injections[serviceClassName] !== 'undefined') {
+        for (let dependency of _$_container.injections[serviceClassName]) {
+            const depServiceId =  dependency.injectionKey;
+            const property = dependency.property;
 
-    if (typeof _$_container.injections[selfKlass] !== 'undefined') {
-
-        for (let dependency of _$_container.injections[selfKlass]) {
-            // skitp any injections into the controllers
-
-            if (isAliased(dependency.key)) {
-                // the param is aliased with "@", its a service we need to inject
-
-                if (unalias(dependency.key) === name) {
-                    Console.exception(`container.ts Cirular reference detected, tried to inject ${dependency.key} into ${name}`);
-                }
-
-                let diInstance = getServiceInstance(unalias(dependency.key));
-                diArgs[dependency.property] = diInstance;
-
-            } else if (isPercent(dependency.key)) {
-                // else its not a service but a parameter from config to inject
-                let paramName = unpercent(dependency.key);
-                let paramValue = _$_container.app.config.get(paramName);
-                diArgs[dependency.property] = paramValue;
-
-            } else {
-                // its nothing
-                Console.exception(`container.ts Unable to inject ${dependency.key} into ${name}, reference must be a @service of %config.accessor%`);
+            if (!isServiceInited(depServiceId)) {
+                initService(depServiceId);
             }
-        }
-    }
 
-    if (typeof _$_container.services[name].instance['injector'] === 'function') {
-        _$_container.services[name].instance['injector'].apply(serviceInstance, [diArgs]);
+            _$_container.services[name].instance[property] = getServiceInstance(depServiceId);
+        }
     }
 
     // run after init callback method if it exists (on 1st init only)

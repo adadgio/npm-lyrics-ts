@@ -15,7 +15,7 @@ my_stuff:
     age:  31
 ```
 
-## Accessing configuration values in controllers
+## Accessing configuration values from controllers
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
@@ -31,18 +31,16 @@ indexAction()
 
 Basic dependency injection (DI) is provider by the `@Inject` annotation.
 
-@todo This might change in the future.
-
 ```node
 // app/AcmeBundle/service/test-service.ts
 import { Service } from '@lyrics/annotation';
 import { Inject }  from '@lyrics/annotation';
 
-@Inject([
-    { age: '%my_stuff.age%' }  // see config.*.yml
-])
 export class TestService extends Service
 {
+    @Inject('%my_stuff.age%')
+    age: number;
+
     /**
      * Required when extending base services
      * you need this for proper DI injection
@@ -51,10 +49,8 @@ export class TestService extends Service
         super();
     }
 
-    public getAge() {
-        let age = this.injected.age;
-
-        return age;
+    getAge() {
+        return this.age;
     }
 }
 ```

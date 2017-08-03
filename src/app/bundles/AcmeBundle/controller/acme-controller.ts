@@ -15,14 +15,15 @@ export class AcmeController extends BaseController
     indexAction(request: Request)
     {
         // access a service instance
-        let testService = this.get('test.service');
-        testService.testInjection();
-        
+        let firstService = this.get('first.service');
+        firstService.sayBye();
+
         // access config values
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');
-
+        
         EventDispatcher.emit('test.event', {qsd: "3"});
+        EventDispatcher.emit('comment.posted', {text:'you suck'});
 
         const name = 'Bilbo Baggins';
         return this.renderHtml('<p>Hello {{name}}</p>', { name: name });

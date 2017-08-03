@@ -11,7 +11,9 @@ export function Controller(route: string): any {
 
         const className = target.prototype.constructor.name;
         const metadata = Reflect.getMetadata('controllerMetadata', target) || new ControllerMeta(className, route, target);
-        
+
         Reflect.defineMetadata('controllerMetadata', metadata, target);
+        
+        container.registerController(target);
    };
 }

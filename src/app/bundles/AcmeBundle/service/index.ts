@@ -1,2 +1,2 @@
-export * from './test-service';
-export * from './other-service';
+export * from './first-service';
+export * from './second-service';

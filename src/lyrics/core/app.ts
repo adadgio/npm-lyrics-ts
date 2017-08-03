@@ -29,9 +29,6 @@ export class App {
 
     private webroot: string;
     private express: express.Application;
-    // private services: Object = {};
-    private preloadedServices: Array<string> = [];
-    private controllers: any;
 
     constructor()
     {
@@ -62,17 +59,6 @@ export class App {
     public run(): void
     {
         this.onDebugAll();
-
-        // preload services if applicable note that services are never inited twice if
-        // properly done, that is using the container method (container::initService())
-        for (let serviceId in container.getRegisteredServices()) {
-            if (this.preloadedServices.indexOf(serviceId) > -1 && !container.isServiceInited(serviceId)) {
-                container.initService(serviceId);
-            }
-
-            // launch services defined as sub processes (@Process decorator)
-            let serviceInstance = container.getServiceInstance(serviceId);
-        }
 
         // prepare express and middlewares
         this.express = express();
@@ -141,13 +127,13 @@ export class App {
         // init service with dependency injections in case its not
         if (!container.isServiceRegistered(name)) {
             // service was not registered
-            throw new Error(`Service [${name}] was never registered`);
+            Console.exception(`Service [${name}] was never registered or declared`);
 
         } else if (!container.isServiceInited(name)) {
             // service registered but never inited (contructed + inject)
             container.initService(name);
         }
-        
+
         return container.getServiceInstance(name);
     }
 
@@ -157,19 +143,6 @@ export class App {
     public import(bundle: string): App
     {
         const deps = DependencyLoader.readBundles(bundle);
-
-        // register all services in the container
-        // for (let serviceName in deps.services) {
-        //     let service = deps.services[serviceName];
-        //     container.registerService(serviceName, service);
-        // }
-
-        // for controllers, we don't register the but pass the metadata
-        // to the container. It will be the router bridge to read them and create routes
-        for (let className in deps.controllers) {
-            let controller = deps.controllers[className];
-            container.registerController(controller);
-        }
 
         return this;
     }
@@ -247,11 +220,5 @@ export class App {
     public getConfigValue(name: string)
     {
         return this.config.get(name);
-    }
-
-    public preloadServices(names: Array<string>)
-    {
-        this.preloadedServices = names;
-        return this;
     }
 }

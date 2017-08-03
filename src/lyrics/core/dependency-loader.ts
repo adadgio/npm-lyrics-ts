@@ -29,7 +29,6 @@ class DependencyLoaderModule {
         const srcDir = PathFinder.getRootDir();
 
         let controllers = {};
-        let services = {};
 
         // Console.info(`dependency-loader.ts adding default /_debug controller...`);
         // controllers['DebugController'] = pathes.normalize(`${srcDir}/lyrics/controller`);
@@ -39,9 +38,9 @@ class DependencyLoaderModule {
         // the job here is basically to  read all the files in
         // the bundle recursively and look for annotations
         const bundleDir = pathes.normalize(`${srcDir}/app/bundles/${bundle}`);
-
-        const files = klawSync(bundleDir, { nodir: true });
         
+        const files = klawSync(bundleDir, { nodir: true });
+
         for (let file of files) {
             const ext = pathes.extname(file.path);
 
@@ -57,20 +56,10 @@ class DependencyLoaderModule {
             const finalClass = importedObject[nameOfClass];
 
             // get target meta data
-            const serviceMetadata = Reflect.getMetadata('serviceMetadata', finalClass);
             const controllerMetadata = Reflect.getMetadata('controllerMetadata', finalClass);
 
-            if (serviceMetadata) {
-
-                const serviceName = serviceMetadata.getName();
-                services[serviceName] = finalClass;
-
-            } else if (controllerMetadata) {
-
+            if (controllerMetadata) {
                 controllers[nameOfClass] = finalClass;
-
-            } else {
-                // yeah ?
             }
         }
 
@@ -86,7 +75,6 @@ class DependencyLoaderModule {
 
         return {
             controllers: controllers,
-            services: services,
         }
     }
 
