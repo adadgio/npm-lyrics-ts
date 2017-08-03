@@ -117,7 +117,7 @@ export function initService(name: string): void {
         _$_container.services[name].instance['onInit']();
         Console.info(`container.ts ${name} service inited using onInit()`);
     } else {
-        Console.warn(`container.ts ${name}::onInit() method seems to be missing`);
+        Console.warn(`container.ts ${name}::onInit() method seems to be missing, which is not grave`);
     }
 }
 
