@@ -15,7 +15,7 @@ my_stuff:
     age:  31
 ```
 
-## Accessing config in controllers
+## Accessing configuration values in controllers
 
 ```node
 // app/AcmeBundle/controller/default-controller.ts
@@ -25,12 +25,13 @@ indexAction()
     let conf = this.app.config.all();
     let item = this.app.config.get('my_stuff.age');
 }
-
 ```
 
-## Injecting config in services
+## Injecting configuration in services
 
 Basic dependency injection (DI) is provider by the `@Inject` annotation.
+
+@todo This might change in the future.
 
 ```node
 // app/AcmeBundle/service/test-service.ts
@@ -58,6 +59,7 @@ export class TestService extends Service
 }
 ```
 
-[&laquo; Home](./../README.md)
 
-[Controllers &raquo;](./CONTROLLERS.md)
+| Previous  | Next |
+| ------------- | ------------- |
+| [&laquo; Home](./../README.md)  | [Controllers &raquo;](./CONTROLLERS.md)  |
