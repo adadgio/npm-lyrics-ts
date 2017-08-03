@@ -29,6 +29,8 @@ the [postman demo collection](./docs/lyrics.postman.json) file.
 - [Controllers](./docs/CONTROLLERS.md)
 - [Routing](./docs/ROUTING.md)
 - [Services and DI](./docs/SERVICES.md)
+- [Security](./docs/SECURITY.md)
+- [Events](./docs/EVENTS.md)
 
 ## Miscellaneous
 

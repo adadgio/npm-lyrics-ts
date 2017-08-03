@@ -23,7 +23,7 @@ clustering.start(f => {
 
     // some services you might want to ini here at start up
     // and not on every request, do it here
-    app.preloadServices([]);
+    // app.preloadServices([]);
 
     // at last and only at last
     // run your app

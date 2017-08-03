@@ -19,15 +19,14 @@ import { BaseService }      from '@lyrics/component';
 export class SecurityService extends BaseService
 {
     /**
-     * From here dependencies marked in service class
-     * annotations above were successfuly injected by the
-     * container ("this.injected" is not empty).
+     * From here injected dependencies from
+     * other services or config are successfuly injected.
      */
     onInit()
     {
 
     }
-
+    
     /**
      * If you use this to secure your route this method
      * will be required (or you will be warned in a harsh way)

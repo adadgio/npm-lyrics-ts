@@ -42,7 +42,7 @@ Requirements and request params
 Here is a more complex example to define route requirements and fetching data from request.
 
 ```node
-// app/AcmeBundle/controller/default-controller.ts
+// app/AcmeBundle/controller/acme-controller.ts
 import { App }                      from '@lyrics/core';
 import { Route, Controller }        from '@lyrics/routing';
 import { Request, JsonResponse }    from '@lyrics/http';
@@ -84,7 +84,3 @@ export class DefaultController extends BaseController
     }
 }
 ```
-
-[&laquo; Events](./../EVENTS.md)
-
-[Security &raquo;](./SECURITY.md)

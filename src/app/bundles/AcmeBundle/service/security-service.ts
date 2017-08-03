@@ -9,9 +9,7 @@ import { BaseService }      from '@lyrics/component';
 export class SecurityService extends BaseService
 {
     /**
-     * Required when extending base services you
-     * need this for proper DI injection, but service
-     * deps are not injected yet ("this.injected" is empty).
+     * Required when extending base service.
      */
     constructor()
     {
@@ -19,9 +17,8 @@ export class SecurityService extends BaseService
     }
 
     /**
-     * From here dependencies marked in service class
-     * annotations above were successfuly injected by the
-     * container ("this.injected" is not empty).
+     * From here injected dependencies from
+     * other services or config are successfuly injected.
      */
     onInit()
     {
@@ -51,7 +48,7 @@ export class SecurityService extends BaseService
      {
 
      }
-     
+
      /**
       * This will be called if checkCrendentials returns true.
       * @todo Not done in router bridge utils yet
