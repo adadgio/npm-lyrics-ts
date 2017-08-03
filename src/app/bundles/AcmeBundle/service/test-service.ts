@@ -7,12 +7,14 @@ import { Listen }           from '@lyrics/annotation';
 import { EventDispatcher }  from '@lyrics/event';
 
 @Service('test.service')
-@Inject([
-    { age: '%my_stuff.age%' },
-    { other: '@other.service' },
-])
 export class TestService extends BaseService
 {
+    @Inject('%my_stuff.age%')
+    injectedValue: number;
+
+    @Inject('@other.service')
+    testService: any;
+
     /**
      * Required when extending base services you
      * need this for proper DI injection, but service
@@ -22,11 +24,9 @@ export class TestService extends BaseService
     {
         super();
     }
-
+    
     /**
-     * From here dependencies marked in service class
-     * annotations above were successfuly injected by the
-     * container ("this.injected" is not empty).
+     * Depencies will be available from here.
      */
     onInit()
     {
@@ -39,10 +39,16 @@ export class TestService extends BaseService
         const event = e;
         this.doSomethingWithAge();
     }
-    
+
+    testInjection()
+    {
+        console.log(this.injectedValue);
+        console.log(this.testService);
+    }
+
     doSomethingWithAge()
     {
-        console.log(`Did something with age: ${this.injected.age}`);
+        // console.log(`Did something with age: ${this.injected.age}`);
     }
 
     greet(txt: string)

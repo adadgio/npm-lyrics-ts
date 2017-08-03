@@ -60,21 +60,22 @@ export function getApp() {
  * Service functions
  */
 export function isServiceInited(name) {
-    return (_$_container.services[name].instance !== null);
+    return (typeof _$_container.services[name] !== 'undefined' && _$_container.services[name].instance !== null);
 }
 export function isServiceRegistered(name) {
     return (typeof _$_container.services[name] === 'object');
 }
 export function registerService(name: string, target?: Object) {
+    Console.comment(`container.ts Registering service ${name}`);
     let className = (undefined === target) ? null : target['name'];
      _$_container.services[name] = { target: target, inited: false, instance: null, className: className };
 }
-export function addServiceInjection(name: string, injectionKey: string, propertyName: string) {
+export function addServiceInjection(name: string, target: any, injectionKey: string, propertyName: string) {
     if (typeof _$_container.injections[name] === 'undefined') {
         _$_container.injections[name] = [];
     }
 
-    _$_container.injections[name].push({ key: injectionKey, property: propertyName });
+    _$_container.injections[name].push({ target: target, key: injectionKey, property: propertyName });
 }
 export function initService(name: string): void {
     KernelEvents.emit(XEvent.CONTAINER_SERVICE_REQUESTED, { info: `container.ts Service ${name} inited` });
@@ -132,7 +133,11 @@ export function getRegisteredServices() {
 }
 
 export function getServiceInstance(name: string) {
-     if (!isServiceInited(name)) {
+    if (!isServiceRegistered(name)) {
+        Console.warn(`container.ts Trying to instantiate a service before is was registered for "${name}"`);
+        return null;
+    }
+    if (!isServiceInited(name)) {
          initService(name);
      }
 

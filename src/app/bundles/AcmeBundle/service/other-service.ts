@@ -7,11 +7,14 @@
 @Service('other.service')
 export class OtherService extends BaseService
 {
+    @Inject('%my_stuff.age%')
+    test: number = null;
+
     constructor()
     {
         super();
     }
-    
+
     onInit()
     {
 

@@ -16,7 +16,8 @@ export class AcmeController extends BaseController
     {
         // access a service instance
         let testService = this.get('test.service');
-
+        testService.testInjection();
+        
         // access config values
         let conf = this.app.config.all();
         let item = this.app.config.get('my_stuff.age');

@@ -38,7 +38,7 @@ export class App {
         // use argument module to retrieve and environment variable
         Argument.require('env', ['dev', 'staging', 'prod']);
         this.env = Argument.getArg('env');
-        
+
         // 2nd param is winston loggin level error|warn|info|verbose|debug|silly
         Console.setEnv(this.env, 'debug');
 
@@ -147,7 +147,7 @@ export class App {
             // service registered but never inited (contructed + inject)
             container.initService(name);
         }
-
+        
         return container.getServiceInstance(name);
     }
 
@@ -159,10 +159,10 @@ export class App {
         const deps = DependencyLoader.readBundles(bundle);
 
         // register all services in the container
-        for (let serviceName in deps.services) {
-            let service = deps.services[serviceName];
-            container.registerService(serviceName, service);
-        }
+        // for (let serviceName in deps.services) {
+        //     let service = deps.services[serviceName];
+        //     container.registerService(serviceName, service);
+        // }
 
         // for controllers, we don't register the but pass the metadata
         // to the container. It will be the router bridge to read them and create routes
