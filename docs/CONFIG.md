@@ -60,6 +60,8 @@ export class TestService extends Service
 ```
 
 
+<p align="center">
 | Previous  | Next |
 | ------------- | ------------- |
 | [&laquo; Home](./../README.md)  | [Controllers &raquo;](./CONTROLLERS.md)  |
+</p>
