@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A typescript framework",
   "repository": "https://github.com/adadgio/nodejs-typescript-starter",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "start": "npm run build:live",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts --env=dev",
