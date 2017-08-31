@@ -17,6 +17,7 @@ Rename the project to your own project name (`acme`)
 ```bash
 cd acme
 npm install
+npm run watch   # compile and watch changes (you can CTRL+C when just testing)
 npm start
 ```
 
