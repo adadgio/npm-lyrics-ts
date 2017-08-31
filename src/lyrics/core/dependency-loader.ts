@@ -38,7 +38,7 @@ class DependencyLoaderModule {
         // the job here is basically to  read all the files in
         // the bundle recursively and look for annotations
         const bundleDir = pathes.normalize(`${srcDir}/app/bundles/${bundle}`);
-        
+
         const files = klawSync(bundleDir, { nodir: true });
 
         for (let file of files) {
@@ -54,6 +54,11 @@ class DependencyLoaderModule {
             const importedObject = require(file.path); // require does obj with key: class name -> function actual class
             const nameOfClass = Object.keys(importedObject)[0];
             const finalClass = importedObject[nameOfClass];
+            
+            // skip empty file or wring export declarations (name of class will be empty)
+            if (typeof(nameOfClass) === 'undefined' || nameOfClass == null || nameOfClass === '') {
+                continue
+            }
 
             // get target meta data
             const controllerMetadata = Reflect.getMetadata('controllerMetadata', finalClass);
