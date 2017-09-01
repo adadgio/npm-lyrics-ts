@@ -54,10 +54,11 @@ class DependencyLoaderModule {
             const importedObject = require(file.path); // require does obj with key: class name -> function actual class
             const nameOfClass = Object.keys(importedObject)[0];
             const finalClass = importedObject[nameOfClass];
-            
+
             // skip empty file or wring export declarations (name of class will be empty)
             if (typeof(nameOfClass) === 'undefined' || nameOfClass == null || nameOfClass === '') {
-                continue
+                Console.red(`dependency-loader.ts empty file or not class declaration found at "${pathes.basename(file.path)}"`);
+                continue;
             }
 
             // get target meta data

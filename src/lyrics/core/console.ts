@@ -135,6 +135,11 @@ class ConsoleSingleton
         console.log('\x1b[36m%s\x1b[0m', text);
     }
 
+    blue(text: string): void {
+        this.writeLog(text);
+        console.log('\x1b[44m%s\x1b[0m', text);
+    }
+
     gray(text: string): void {
         this.writeLog(text);
         console.log('\x1b[97m%s\x1b[0m', text);
