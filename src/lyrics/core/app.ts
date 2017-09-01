@@ -77,6 +77,20 @@ export class App {
         container.startEventDispatcherListeners();
     }
 
+    startProcesses()
+    {
+        let pids = [];
+        const processes = container.getRegisteredProcesses();
+
+        for (let processId in processes) {
+            const pid = processId;
+
+            let process = new processes[processId]['target']();
+            process.setName(processId);
+            process.doStart();
+        }
+    }
+
     private middleware(): void
     {
         // tell express to parse incoming body from json to object

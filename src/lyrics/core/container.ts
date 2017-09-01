@@ -23,6 +23,7 @@ const _$_container = {
     methods: {},
     controllers: {},
     injections: {},
+    processes: {},
 };
 
 export function debug() {
@@ -157,6 +158,17 @@ export function getServiceDefinitionByClassName(className: string) {
         }
     }
     return false;
+}
+
+export function registerProcess(name: string, target?: Object) {
+    Console.comment(`container.ts Registered process [${name}]`);
+
+    let className = (undefined === target) ? null : target['name'];
+     _$_container.processes[name] = { target: target, instance: null, className: className, filePath: null };
+}
+
+export function getRegisteredProcesses() {
+    return _$_container.processes;
 }
 
 /**

@@ -40,7 +40,6 @@ program
   .parse(process.argv);
 
  console.log(program.update);
-// console.log(program.update);
 // if (helpers.isSetButNotValid(program.update)) {
 //     log(chalk.red(`$> Invalid ${chalk.underline.bold('version')} string for the --update (-u) option\n`));
 // }
