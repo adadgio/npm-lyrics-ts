@@ -6,11 +6,11 @@ import * as container  from '@lyrics/core/container';
 import { ServiceMeta } from '@lyrics/annotation';
 
 type ServiceDefinition = {
-
+    autoinit: boolean;
 };
 
 const DefaultServiceDefinition:ServiceDefinition = {
-    one: 2
+    autoinit: false,
 };
 
 export function Service(serviceName: string, opts: ServiceDefinition = DefaultServiceDefinition) {
@@ -19,5 +19,9 @@ export function Service(serviceName: string, opts: ServiceDefinition = DefaultSe
         // const className = target.prototype.constructor.name;
         const service = target;
         container.registerService(serviceName, service);
+
+        if (typeof opts.autoinit !== undefined && true === opts.autoinit) {
+            container.initService(serviceName);
+        }
     };
 }
