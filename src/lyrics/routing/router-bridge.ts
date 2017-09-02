@@ -121,13 +121,19 @@ class RouterBridgeSingleton {
             res.statusCode = respResult.getCode();
             res.json(respResult.getJsonContent());
 
-        } else if (respResult instanceof String || typeof respResult === 'number') {
+        } else if (respResult instanceof String || typeof respResult === 'string' || typeof respResult === 'number') {
             debug.contentType = 'text/plain';
             res.statusCode = 200;
             res.send(respResult.toString());
 
+        } else if (respResult instanceof Promise) {
+            respResult.then((r) => {
+                this.sendResponse(r, res);
+            }).catch(e => {
+                this.sendResponse(e.toString(), res);
+            });
         } else {
-            throw Error('router-bridge.ts controller response must be a string or an instance of Response or JsonResponse');
+            throw Error('router-bridge.ts controller response must be a string or an instance of Response or JsonResponse or a Promise that returns one of these');
         }
 
         return debug;
